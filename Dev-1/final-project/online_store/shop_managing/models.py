@@ -1,5 +1,7 @@
+from django.contrib import admin
 from django.db import models
 from django.db.models.deletion import CASCADE, SET_NULL
+from django.utils.safestring import mark_safe
 from accounts.models import User
 
 class Tag(models.Model):
@@ -46,6 +48,12 @@ class Product(models.Model):
     shop = models.ForeignKey(Shop, on_delete=CASCADE)
     amount = models.IntegerField()
     image = models.ImageField(upload_to="", null=True, blank=True)
+
+    def admin_image(self):
+        return mark_safe('<img src="{}" width="100"/>'.format(self.image.url))
+    admin_image.short_description = 'Image'
+    admin_image.allow_tags = True
+
 
     def __str__(self):
         return f"product: {self.title}"
