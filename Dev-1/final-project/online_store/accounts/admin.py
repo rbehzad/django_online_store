@@ -1,98 +1,38 @@
 from django.contrib import admin
-
-# Register your models here.
-from django.contrib import admin
+from .models import GuestEmail, User
+from .forms import UserAdminCreationForm, UserAdminChangeForm
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .forms import UserCreationForm, UserChangeForm
-from .models import User
-from django.contrib.auth.models import Group
 
 
+@admin.register(User)
 class UserAdmin(BaseUserAdmin):
-	form = UserChangeForm
-	add_form = UserCreationForm
-	list_display = ('fullname', 'username', 'email', 'is_admin', 'is_seller')
-	list_filter = ('is_admin', 'is_seller')
-	fieldsets = (
-		('Main', {'fields':('fullname', 'username', 'email', 'phone_number', 'password')}),
-		('Personal info', {'fields':('is_active', 'is_seller')}),
-		('Permissions', {'fields':('is_admin',)})
-	)
-	add_fieldsets = (
-		(None, {
-			'fields':('fullname', 'username', 'email', 'phone_number', 'password1', 'password2', 'is_seller')
-		}),
-	)
-	search_fields = ('email', 'username')
-	ordering = ('email', 'username')
-	filter_horizontal = ()
+    # The forms to add and change user instances
+    form = UserAdminChangeForm
+    add_form = UserAdminCreationForm
 
-
-admin.site.register(User, UserAdmin)
-admin.site.unregister(Group)
-
-
-
-
-
-
-
+    # The fields to be used in displaying the User model.
+    # These override the definitions on the base UserAdmin
+    # that reference specific fields on auth.User.
+    list_display = ('email', 'superuser', 'staff', 'active', 'seller')
+    list_filter = ('superuser', 'staff', 'active', 'seller')
+    fieldsets = (
+        (None, {'fields': ('email', 'password')}),
+        ('Personal info', {'fields': ('first_name', 'last_name')}),
+        ('Permissions', {'fields': ('superuser', 'staff', 'active', 'seller')}),
+    )
+    # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
+    # overrides get_fieldsets to use this attribute when creating a user.
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('email', 'password1', 'password2')}
+        ),
+    )
+    search_fields = ('email',)
+    ordering = ('email',)
+    filter_horizontal = ()
 
 
 
+admin.site.register(GuestEmail)
 
-
-
-# from django.contrib import admin
-# from django.contrib.auth.admin import UserAdmin
-
-
-# class CustomUserAdmin(UserAdmin):
-#     list_display = (
-#         'username', 'email', 'first_name', 'last_name', 'is_staff',
-#         'is_seller'
-#         )
-
-#     fieldsets = (
-#         (None, {
-#             'fields': ('username', 'password')
-#         }),
-#         ('Personal info', {
-#             'fields': ('full_name', 'email')
-#         }),
-#         ('Permissions', {
-#             'fields': (
-#                 'is_active',
-#                 'groups', 'user_permissions'
-#                 )
-#         }),
-#         ('Important dates', {
-#             'fields': ('last_login')
-#         }),
-#         ('Additional info', {
-#             'fields': ('is_seller',)
-#         })
-#     )
-
-#     add_fieldsets = (
-#         (None, {
-#             'fields': ('username', 'password1', 'password2')
-#         }),
-#         ('Personal info', {
-#             'fields': ('first_name', 'last_name', 'email')
-#         }),
-#         ('Permissions', {
-#             'fields': (
-#                 'is_active',
-#                 'groups', 'user_permissions'
-#                 )
-#         }),
-#         ('Important dates', {
-#             'fields': ('last_login')
-#         }),
-#         ('Additional info', {
-#             'fields': ('is_student',)
-#         })
-#     )
-
-# admin.site.register(User, CustomUserAdmin)

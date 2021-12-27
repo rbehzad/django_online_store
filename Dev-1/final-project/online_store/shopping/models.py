@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models.base import Model
 from django.db.models.deletion import CASCADE
-from accounts.models import User
+# from accounts.models import User
 from shop_managing.models import *
 
 
@@ -15,12 +15,12 @@ class Cart(models.Model):
         choices=STATUS_CHOICES,
         default='unp',
     )
-    user = models.ForeignKey(User, on_delete=CASCADE)
+    # user = models.ForeignKey(User, on_delete=CASCADE)
     total_cost = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self) -> str:
-        return f"cart: {self.user.fullname}"
+    # def __str__(self) -> str:
+    #     return f"cart: {self.user.fullname}"
 
 
 class CartItem(models.Model):

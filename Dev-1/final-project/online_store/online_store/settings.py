@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'accounts',
     'shop_managing',
     'shopping',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -81,7 +82,7 @@ WSGI_APPLICATION = 'online_store.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
+        'NAME': 'postgres2',
     }
 }
 
@@ -141,5 +142,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # ACCOUNT_EMAIL_VERIFICATION = "none"
 
 
-AUTHENTICATION_BACKENDS = ['accounts.mybackends.EmailUserNameModelBackend','django.contrib.auth.backends.ModelBackend']
+# AUTHENTICATION_BACKENDS = ['accounts.mybackends.EmailUserNameModelBackend','django.contrib.auth.backends.ModelBackend']
 AUTH_USER_MODEL = 'accounts.User'
