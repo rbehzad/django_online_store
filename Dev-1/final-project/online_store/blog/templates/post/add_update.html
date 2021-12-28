@@ -1,0 +1,126 @@
+{% extends "post/class_base.html" %}
+{% load static %}
+
+{% block title %}{{request.user}}'s dashboard{% endblock title %}
+
+
+{% block menu %}
+<ul>
+    <li><a href="{% url 'home' %}">Home</a></li>
+    <li><a href="{% url 'contact' %}">Contact me</a></li>
+    <li><a href="{% url 'add_post' %}">Add New Post</a></li>
+    <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+    <li><a href="{% url 'logout' %}">Logout</a></li>
+</ul>
+{% endblock menu %}
+
+
+{% block content %}
+{% if request.user.is_authenticated %}
+
+    {% if page == 'add_post' or page == 'update_post' %}
+        {% if page == 'add_post' %}
+        <h1>Add New Post</h1><br><br>
+        {% else %}
+        <h1>Update Post</h1><br><br>
+        {% endif %}
+
+        {% if submitted %}
+            succesfully
+
+        {% else %}
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.media }}
+                {{ form.as_p}}
+
+                <input type="submit" value="Save" class="btn btn-secondary">
+            </form>
+        {% endif %}
+        <br><br>
+
+
+    {% elif page == 'add_category'%}
+        <h1>Add New Category</h1><br><br>
+
+        {% if submitted %}
+            succesfully
+
+        {% else %}
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p}}
+
+                <input type="submit" value="Save" class="btn btn-secondary">
+            </form>
+        {% endif %}
+        <br><br>
+
+    {% elif page == 'update_category'%}
+        <h1>Update Category</h1><br><br>
+
+        {% if submitted %}
+            succesfully
+
+        {% else %}
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p}}
+
+                <input type="submit" value="Save" class="btn btn-secondary">
+            </form>
+        {% endif %}
+        <br><br>
+
+    {% elif page == 'add_tag'%}
+        <h1>Add New Tag</h1><br><br>
+
+        {% if submitted %}
+            succesfully
+
+        {% else %}
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p}}
+
+                <input type="submit" value="Save" class="btn btn-secondary">
+            </form>
+        {% endif %}
+        <br><br>
+
+    {% elif page == 'update_tag'%}
+        <h1>Update Tag</h1><br><br>
+
+        {% if submitted %}
+            succesfully
+
+        {% else %}
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p}}
+
+                <input type="submit" value="Save" class="btn btn-secondary">
+            </form>
+        {% endif %}
+        <br><br>
+
+        {% elif page == 'add_comment'%}
+        <h1>Add Comment</h1><br><br>
+
+        {% if submitted %}
+            succesfully
+
+        {% else %}
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p}}
+
+                <input type="submit" value="Save" class="btn btn-secondary">
+            </form>
+        {% endif %}
+        <br><br>
+    {% endif %}
+
+{% endif %}
+
+{% endblock content %}

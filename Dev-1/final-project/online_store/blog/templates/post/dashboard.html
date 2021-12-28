@@ -1,0 +1,43 @@
+{% extends "post/class_base.html" %}
+{% load static %}
+
+{% block title %}
+  {{request.user}}'s dashboard
+{% endblock title %}
+
+
+{% block menu %}
+<ul>
+    <li><a href="{% url 'home' %}">Home</a></li>
+    <li><a href="{% url 'contact' %}">Contact me</a></li>
+    <li><a href="{% url 'add_post' %}">Add New Post</a></li>
+    <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+    <li><a href="{% url 'logout' %}">Logout</a></li>
+</ul>
+{% endblock menu %}
+
+
+{% block content %}
+  {% if request.user.is_authenticated %}
+
+      {% if posts|length == 0 %}
+      <div>
+        <a href="{% url 'add_post' %}"><div class="d-flex justify-content-center btn btn-secondary my-2">   Add Post  </div></a>
+      </div>
+
+      {% else %}
+        {% for post in posts %}
+        <div class="postbody">
+        <a href="{% url 'post_detail' post.slug %}"><h1>{{post.title}}</h1></a><br><br>
+        <div class="publish_info">Post Date: {{post.created_at}} ··· Categories: {% for category_ in post.category.all %}{{category_.title}}, {% endfor %}</div>
+        <div class="publish_info">Tags: {% for tag_ in post.tag.all %}{{tag_.title}}, {% endfor %}</div><br>
+        <span><a href="{% url 'delete_post' post.slug %}" class="btn btn-outline-danger btn-sm">Delete Post</a></span>
+        <span><a href="{% url 'update_post' post.slug %}" class="btn btn-outline-danger btn-sm">Update Post</a></span>
+        <div class="comment">Comments ({{post.comment_set.count}})</div>
+        </div>
+        {% endfor %}
+      {% endif %}
+
+
+  {% endif %}
+{% endblock content %}

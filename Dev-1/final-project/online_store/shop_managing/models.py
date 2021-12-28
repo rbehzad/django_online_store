@@ -47,7 +47,7 @@ class Product(models.Model):
     tag = models.ManyToManyField(Tag, null=True, blank=True)
     shop = models.ForeignKey(Shop, on_delete=CASCADE)
     amount = models.IntegerField()
-    image = models.ImageField(upload_to="", null=True, blank=True)
+    image = models.ImageField(upload_to="images/", null=True, blank=True)
 
     def admin_image(self):
         return mark_safe('<img src="{}" width="100"/>'.format(self.image.url))

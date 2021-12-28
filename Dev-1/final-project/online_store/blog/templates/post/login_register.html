@@ -1,0 +1,71 @@
+{% extends "post/class_base.html" %}
+{% load static %}
+
+{% block title %}
+    login/register
+{% endblock title %}
+
+{% block menu %}
+{% if request.user.is_authenticated %}
+<ul>
+    <li><a href="{% url 'home' %}">Home</a></li>
+    <li><a href="{% url 'contact' %}">Contact me</a></li>
+    <li><a href="{% url 'add_post' %}">Add New Post</a></li>
+    <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+    <li><a href="{% url 'logout' %}">Logout</a></li>
+</ul>
+
+{% else %}
+<ul>
+    <li><a href="{% url 'home' %}">Home</a></li>
+    <li><a href="{% url 'contact' %}">Contact me</a></li>
+    {# <li><a href="{% url 'login' %}">Login</a></li> #}
+    {# <li><a href="{% url 'register' %}">Register</a></li> #}
+</ul>
+{% endif %}
+{% endblock menu %}
+
+
+{% block content %} 
+
+        {% if page == 'login' %}
+        <div class='container'>
+        <div class="login--wrapper" style="display: flex; align-items: center; height: 50vh;">
+            <form method='post' class='form' style="width: 500px;">
+                <h1>Login</h1>
+                {% csrf_token %}
+                
+                <div class="mb-3 my-5">
+                    <label for="exampleInputUser1" class="form-label">Username</label>
+                    <input type="username" name='username' class="form-control" id="exampleInputUser1" aria-describedby="userHelp">
+                </div>
+                <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">Password</label>
+                    <input type="password" name='password' class="form-control" id="exampleInputPassword1">
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+                <p>Don't Have an Account <a href="{% url 'register' %}">Register</a></p>
+            </form>
+        </div>
+        </div>
+        {% else %}
+        <div class='container'>
+        <div class="login--wrapper" style="display: flex; align-items: center; height: 50vh;">
+            <form method="post">
+                <h1>Register</h1>
+                {% csrf_token %}
+                <div class="my-5">
+                    {% for field in form %}
+                    <div class="mb-3">
+                        <label for="exampleInputPassword1" class="form-label">{{field.label}}</label>
+                        {{field}}
+                    </div>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="btn btn-primary">Register</button>
+                <p>Already Have an Account <a href="{% url 'login' %}">Login</a></p>
+            </form>
+        </div>
+        </div>
+        {% endif %}
+{% endblock content %}
