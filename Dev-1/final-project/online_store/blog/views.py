@@ -58,8 +58,7 @@ def class_category(request, slug_text):
 
 @login_required(login_url='login')
 def dashboard(request):
-    user = request.user
-    posts = Post.objects.filter(author=user).order_by('-created_at')
+    posts = Post.objects.filter(author=request.user).order_by('-created_at')
     categories = Category.objects.all().order_by('-created_at')
     tags = Tag.objects.all().order_by('-created_at')
     context = {
@@ -173,6 +172,7 @@ def addTag(request):
     return render(request, 'post/add_update.html', context)
 
 
+@login_required(login_url='login')
 def deletePost(request, slug):
     page = 'post'
     post = Post.objects.get(slug=slug)
@@ -185,6 +185,7 @@ def deletePost(request, slug):
     return render(request, 'post/delete_confirm.html', context)
 
 
+@login_required(login_url='login')
 def updatePost(request, slug):
     page = 'update_post'
     post = Post.objects.get(slug=slug)
@@ -296,7 +297,7 @@ def updateTag(request, slug):
     return render(request, 'post/add_update.html', context)
 
 
-
+@login_required(login_url='login')
 def addComment(request, slug):
     page = 'add_comment'
     categories = Category.objects.all().order_by('-created_at')

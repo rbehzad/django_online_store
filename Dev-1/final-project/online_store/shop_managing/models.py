@@ -1,3 +1,4 @@
+from os import truncate
 from django.contrib import admin
 from django.db import models
 from django.db.models.deletion import CASCADE, SET_NULL
@@ -9,6 +10,12 @@ class Tag(models.Model):
 
     def __str__(self):
         return f"tag: {self.title}"
+
+class ShopType(models.Model):
+    title = models.CharField(max_length=120)
+
+    def __str__(self):
+        return f"shop type: {self.title}"
 
 
 class Shop(models.Model):
@@ -22,23 +29,15 @@ class Shop(models.Model):
         choices=STATUS_CHOICES,
         default='Pending',
     )
-    SHOP_TYPE = {
-        ('dairy', 'dairy'),
-        ('drugstore', 'drugstore'),
-        ('sweetshop', 'sweetshop'),
-        ('bookshop', 'bookshop'),
-    }
-    shop_type = models.CharField(
-        max_length=10,
-        choices=SHOP_TYPE,
-    )
+
+    shop_type = models.OneToOneField(ShopType, on_delete=SET_NULL, null=True, blank=True)
 
     title = models.CharField(max_length=120)
     user = models.ForeignKey(User, on_delete=CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"shop: {self.title} _ {self.shop_type}"
+        return f"shop:{self.shop_type}:{self.title}"
 
 
 class Product(models.Model):
