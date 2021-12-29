@@ -5,7 +5,7 @@ from django.contrib.auth.models import (
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, password=None, first_name=None, last_name=None, is_active=True, is_staff=False, is_superuser=False, is_seller=False):
+    def create_user(self, email, password=None, first_name=None, last_name=None, phone_number=None, is_active=True, is_staff=False, is_superuser=False, is_seller=False):
         if not email:
             raise ValueError('Users must have an email address')
         if not password:
@@ -14,7 +14,8 @@ class UserManager(BaseUserManager):
         user_obj = self.model(
             email=self.normalize_email(email),
             first_name=first_name,
-            last_name=last_name
+            last_name=last_name,
+            phone_number=phone_number,
         )
         user_obj.active = is_active
         user_obj.staff = is_staff
@@ -61,6 +62,12 @@ class User(AbstractBaseUser, PermissionsMixin):
         blank=True,
         max_length=80,
         verbose_name='Last Name'
+    )
+    phone_number = models.CharField(
+        null=True,
+        blank=True,
+        max_length=13,
+        verbose_name='Phone Number'
     )
     active = models.BooleanField(
         default=True,
