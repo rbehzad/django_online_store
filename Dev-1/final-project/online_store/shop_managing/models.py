@@ -9,13 +9,13 @@ class Tag(models.Model):
     title = models.CharField(max_length=120)
 
     def __str__(self):
-        return f"tag: {self.title}"
+        return f"Tag:{self.title}"
 
 class ShopType(models.Model):
     title = models.CharField(max_length=120)
 
     def __str__(self):
-        return f"shop type: {self.title}"
+        return f"ShopType:{self.title}"
 
 
 class Shop(models.Model):
@@ -30,14 +30,14 @@ class Shop(models.Model):
         default='Pending',
     )
 
-    shop_type = models.OneToOneField(ShopType, on_delete=SET_NULL, null=True, blank=True)
+    shop_type = models.ForeignKey(ShopType, on_delete=SET_NULL, null=True, blank=True)
 
     title = models.CharField(max_length=120)
     user = models.ForeignKey(User, on_delete=CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"shop:{self.shop_type}:{self.title}"
+        return f"Shop:{self.title}"
 
 
 class Product(models.Model):
@@ -46,7 +46,6 @@ class Product(models.Model):
     tag = models.ManyToManyField(Tag, null=True, blank=True)
     shop = models.ForeignKey(Shop, on_delete=CASCADE)
     amount = models.IntegerField()
-    # image = models.ImageField(upload_to="images/", null=True, blank=True)
     image = models.FileField()
 
     def admin_image(self):
@@ -56,4 +55,4 @@ class Product(models.Model):
 
 
     def __str__(self):
-        return f"product: {self.title}"
+        return f"Product:{self.title}"

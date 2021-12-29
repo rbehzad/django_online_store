@@ -8,7 +8,7 @@ admin.site.register(ShopType)
 
 class TagAdmin(admin.ModelAdmin):
     list_display = ('id', 'title')
-    search_fields = ('title',)
+    list_filter = ('title',)
 admin.site.register(Tag, TagAdmin)
  
 
@@ -48,31 +48,28 @@ class TagFilter(SimpleListFilter):
 
 
 # there is no shoptype field in Product model and because of that we wrote seperatly code then add to it
-# class ShopTypeFilter(SimpleListFilter):
-#     title = 'ShopType Filter'
-#     parameter_name = 'product_shoptype'
-#     queryset_shoptypes = Shop.objects.all()
-#     tuple_shoptypes = {tuple(i.values()) for i in queryset_shoptypes}
-#     def lookups(self, request, model_admin):
-#         return(
-#             ShopTypeFilter.tuple_shoptypes
-#         )
+class ShopTypeFilter(SimpleListFilter):
+    title = 'ShopType Filter'
+    parameter_name = 'product_shoptype'
+    shoptypes = ShopType.objects.all()
+    # tuple_shoptypes = set(tuple(i) for i in queryset_shoptypes.values())
+    shoptype_list = []
+    for shoptype in shoptypes:
+        shoptype_list.append((shoptype.title, shoptype.title,))
 
-#     def queryset(self, request, queryset):
-#         if not self.value():
-#             return queryset
+    def lookups(self, request, model_admin):
+        return tuple(ShopTypeFilter.shoptype_list)
 
-#         for shoptype in ShopTypeFilter.tuple_shoptypes:
-#             if self.value().lower() == shoptype[0]:
-#                 return queryset.filter(shop__shop_type=Shop.object.get(title=shoptype[0]))
+    def queryset(self, request, queryset):
+        if not self.value():
+            return queryset
 
+        for shoptype in ShopTypeFilter.shoptype_list:
+            if self.value().lower() == shoptype[0]:
+                return queryset.filter(shop__shop_type__title=shoptype[0])
 
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('admin_image', 'title', 'shop', 'amount')
-    # list_filter = ('shop', TagFilter, ShopTypeFilter)
-    list_filter = ('shop', TagFilter)
+    list_filter = ('shop', TagFilter, ShopTypeFilter)
     search_fields = ('title',)
 admin.site.register(Product, ProductAdmin)
-
-
-
