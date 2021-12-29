@@ -16,7 +16,7 @@ class UserAdmin(BaseUserAdmin):
     list_display = ('email', 'superuser', 'staff', 'active', 'seller')
     list_filter = ('superuser', 'staff', 'active', 'seller')
     fieldsets = (
-        (None, {'fields': ('email', 'password')}),
+        (None, {'fields': ('email', 'password', 'phone_number')}),
         ('Personal info', {'fields': ('first_name', 'last_name')}),
         ('Permissions', {'fields': ('superuser', 'staff', 'active', 'seller')}),
     )
