@@ -71,42 +71,49 @@ def dashboard(request):
 
 def logoutUser(request):
     logout(request)
-    return redirect('home')
-    # return redirect('login')
+    # return redirect('home')
+    return redirect('login')
 
 
 def loginUser(request):
-    page = 'login'
-    context = {'page': page}
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
+    if request.user.is_authenticated:
+        return redirect('dashboard')
+    else:
+        page = 'login'
+        context = {'page': page}
+        if request.method == 'POST':
+            username = request.POST['username']
+            password = request.POST['password']
 
-        # if user authenticated below function return user object
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            # this is gonna create that session and put into that coockies
-            login(request, user)
-            return redirect('dashboard')
+            # if user authenticated below function return user object
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                # this is gonna create that session and put into that coockies
+                login(request, user)
+                return redirect('dashboard')
 
-    return render(request, 'post/login_register.html', context)
+        return render(request, 'post/login_register.html', context)
 
 
 def registerUser(request):
-    page = 'register'
-    form = CustomUserCreationForm()
-    if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.save()
+    if request.user.is_authenticated:
+        return redirect('dashboard')
+    else:
+        page = 'register'
+        form = CustomUserCreationForm()
+        if request.method == 'POST':
+            form = CustomUserCreationForm(request.POST)
+            if form.is_valid():
+                user = form.save(commit=False)
+                user.save()
 
-            if user is not None:
-                login(request, user)
-                return redirect('dashboard')
-        
-    context = {'form': form, 'page': page}
-    return render(request, 'post/login_register.html', context)
+                if user is not None:
+                    login(request, user)
+                    return redirect('dashboard')
+            
+        context = {'form': form, 'page': page}
+        return render(request, 'post/login_register.html', context)
+
 
 @login_required(login_url='login')
 def addPost(request):

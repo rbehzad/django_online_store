@@ -25,7 +25,7 @@ class Shop(models.Model):
         ('Deleted', 'Deleted'),
     }
     status = models.CharField(
-        max_length= 10,
+        max_length= 12,
         choices=STATUS_CHOICES,
         default='Pending',
     )
@@ -42,6 +42,7 @@ class Shop(models.Model):
 
 class Product(models.Model):
     title = models.CharField(max_length=120)
+    description = models.TextField()
     price = models.IntegerField()
     tag = models.ManyToManyField(Tag, null=True, blank=True)
     shop = models.ForeignKey(Shop, on_delete=CASCADE)

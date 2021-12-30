@@ -52,7 +52,6 @@ class ShopTypeFilter(SimpleListFilter):
     title = 'ShopType Filter'
     parameter_name = 'product_shoptype'
     shoptypes = ShopType.objects.all()
-    # tuple_shoptypes = set(tuple(i) for i in queryset_shoptypes.values())
     shoptype_list = []
     for shoptype in shoptypes:
         shoptype_list.append((shoptype.title, shoptype.title,))
