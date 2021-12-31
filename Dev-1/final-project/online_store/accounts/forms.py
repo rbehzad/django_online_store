@@ -2,7 +2,16 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
-User = get_user_model()
+from django.urls import reverse
+from django.views.generic import edit
+from django import forms
+from django.contrib.auth import authenticate, login, get_user_model
+from django.contrib.auth.forms import ReadOnlyPasswordHashField
+from django.utils.safestring import mark_safe
+from django.contrib.auth.forms import UserCreationForm
+from .models import User
+
+# User = get_user_model()
 
 class UserAdminCreationForm(forms.ModelForm):
     """
@@ -51,84 +60,26 @@ class UserAdminChangeForm(forms.ModelForm):
         return self.initial["password"]
 
 
-class LoginForm(forms.Form):
-    email = forms.CharField(
-        widget=forms.TextInput(
-            attrs={
-                "class": "form-control",
-                "placeholder": "E-Mail"
-            }
-        )
-    )
-    password = forms.CharField(
-        widget=forms.PasswordInput(
-            attrs={
-                "class": "form-control",
-                "placeholder": "Password"
-            }
-        )
-    )
+class RegisterForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email', 'phone_number', 'password1', 'password2']
 
+    def __init__(self, *args, **kwargs):
+        super(RegisterForm, self).__init__(*args, **kwargs)
+        self.fields['first_name'].widget.attrs.update(
+            {'class': 'form-control', 'placeholder': 'Enter firstname...'})
+        self.fields['last_name'].widget.attrs.update(
+            {'class': 'form-control', 'placeholder': 'Enter lastname...'})
+        self.fields['email'].widget.attrs.update(
+            {'class': 'form-control', 'placeholder': 'Enter email...'})
+        self.fields['phone_number'].widget.attrs.update(
+            {'class': 'form-control', 'placeholder': 'Enter phone number...', 'value': '+98 '})
+        self.fields['password1'].widget.attrs.update(
+            {'class': 'form-control', 'placeholder': 'Enter password...'})
+        self.fields['password2'].widget.attrs.update(
+            {'class': 'form-control', 'placeholder': 'Confirm password...'})
 
-class RegisterForm(forms.Form):
-    first_name = forms.CharField(
-        label='First Name',
-        widget=forms.TextInput(
-            attrs={
-                "class": "form-control",
-                "placeholder": "First Name"
-            }
-        )
-    )
-    last_name = forms.CharField(
-        label='Last Name',
-        widget=forms.TextInput(
-            attrs={
-                "class": "form-control",
-                "placeholder": "Last Name"
-            }
-        )
-    )
-    email = forms.EmailField(
-        widget=forms.EmailInput(
-            attrs={
-                "class": "form-control",
-                "placeholder": "Email"
-            }
-        )
-    )
-    password = forms.CharField(
-        widget=forms.PasswordInput(
-            attrs={
-                "class": "form-control",
-                "placeholder": "Password"
-            }
-        )
-    )
-    password2 = forms.CharField(
-        label='Confirm Password',
-        widget=forms.PasswordInput(
-            attrs={
-                "class": "form-control",
-                "placeholder": "Password again"
-            }
-        )
-    )
-
-    def clean_email(self):
-        email = self.cleaned_data.get('email')
-        qs = User.objects.filter(email=email)
-        if qs.exists():
-            raise forms.ValidationError('Email is taken')
-        return email
-
-    def clean(self):
-        data = self.cleaned_data
-        password = data.get('password')
-        password2 = data.get('password2')
-        if password2 != password:
-            raise forms.ValidationError('Passwords must match')
-        return data
 
 
 class GuestForm(forms.Form):

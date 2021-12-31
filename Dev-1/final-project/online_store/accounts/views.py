@@ -1,35 +1,54 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model, authenticate, login
-from .forms import RegisterForm, LoginForm, GuestForm
+from .forms import *
 from .models import GuestEmail
 from django.utils.http import is_safe_url
 from django.contrib import messages
+from django.views.generic import CreateView, FormView, DetailView, View, UpdateView
+from online_store.mixins import NextUrlMixin, RequestFormAttachMixin
+from .models import User
 
-User = get_user_model()
+
+class RegisterView(CreateView):
+    form_class = RegisterForm
+    template_name = 'accounts/pages-register.html'
+    success_url = '/pages-login/'
 
 
-def register_page(request):
-    form = RegisterForm(request.POST or None)
 
-    if form.is_valid():
-        data = form.cleaned_data
-        email = data.get('email')
-        password = data.get('password')
-        first_name = data.get('first_name')
-        last_name = data.get('last_name')
-        new_user = User.objects.create_user(email, password, first_name, last_name)
-        if new_user is not None:
-            messages.success(request, "Created User.")
-            return redirect('accounts:login')
+class LoginView(NextUrlMixin, RequestFormAttachMixin, FormView):
+    form_class = LoginForm
+    success_url = '/'
+    template_name = 'accounts/pages-login.html'
+    default_next = '/'
+
+    def form_valid(self, form):
+        next_path = self.get_next_url()
+        return redirect(next_path)
+
+
+# def register_page(request):
+#     form = RegisterForm(request.POST or None)
+
+#     if form.is_valid():
+#         data = form.cleaned_data
+#         email = data.get('email')
+#         password = data.get('password')
+#         first_name = data.get('first_name')
+#         last_name = data.get('last_name')
+#         new_user = User.objects.create_user(email, password, first_name, last_name)
+#         if new_user is not None:
+#             messages.success(request, "Created User.")
+#             return redirect('accounts:login')
         
-        messages.warning(request, "Create Error !")
+#         messages.warning(request, "Create Error !")
 
 
-    context = {
-        "form": form
-    }
+#     context = {
+#         "form": form
+#     }
 
-    return render(request, "accounts/register.html", context)
+#     return render(request, "accounts/register.html", context)
 
 
 def login_page(request):
