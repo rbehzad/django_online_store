@@ -17,7 +17,7 @@ class RegisterView(CreateView):
 
 def LoginView(request):
     if request.user.is_authenticated:
-        return redirect('shop_register')
+        return redirect('shop_home')
     else:
         if request.method == 'POST':
             username = request.POST['email']
@@ -27,7 +27,7 @@ def LoginView(request):
             if user is not None:
                 # this is gonna create that session and put into that coockies
                 login(request, user)
-                return redirect('shop_register')
+                return redirect('shop_home')
 
         return render(request, 'accounts/pages-login.html', {'page': 'login'})
 
