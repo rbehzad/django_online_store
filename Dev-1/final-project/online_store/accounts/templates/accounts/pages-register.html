@@ -12,7 +12,41 @@
     <form class="row g-3 needs-validation" method="POST" enctype="multipart/form-data" novalidate>
 
       {% csrf_token %}
-      {{ form }}
+      <div class="col-12">
+        <label for="yourName" class="form-label">Your First Name:</label>
+        {{ form.first_name }}
+        <div class="invalid-feedback">Please, enter your first name!</div>
+      </div>
+      <div class="col-12">
+        <label for="yourName" class="form-label">Your Last Name:</label>
+        {{ form.last_name }}
+        <div class="invalid-feedback">Please, enter your last name!</div>
+      </div>
+      <div class="col-12">
+        <label for="yourEmail" class="form-label">Your Email:</label>
+        {{ form.email }}
+        <div class="invalid-feedback">Please enter a valid Email adddress!</div>
+      </div>
+      <div class="col-12">
+        <label for="yourEmail" class="form-label">Your Phone Number:</label>
+        {{ form.phone_number }}
+        <div class="invalid-feedback">Please enter a valid phone number!</div>
+      </div>  
+      
+      <div class="col-12">
+        <label for="yourPassword" class="form-label">Password:</label>
+        {{ form.password1 }}
+        <div class="invalid-feedback">Please enter your password!</div>
+      </div>
+      <div class="col-12">
+        <label for="yourPassword" class="form-label">Confirm Password:</label>
+        {{ form.password2 }}
+        <div class="invalid-feedback">Confirm your password!</div>
+      </div> 
+      <div class="col-12">
+        {{ form.seller }}
+        <label for="isSeller" class="form-label">I am seller</label>
+      </div> 
 
       <div class="col-12">
         <div class="form-check">

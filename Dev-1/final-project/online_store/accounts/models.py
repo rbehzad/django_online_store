@@ -16,11 +16,12 @@ class UserManager(BaseUserManager):
             first_name=first_name,
             last_name=last_name,
             phone_number=phone_number,
+            seller=is_seller,
         )
         user_obj.active = is_active
         user_obj.staff = is_staff
         user_obj.superuser = is_superuser
-        user_obj.seller = is_seller
+        # user_obj.seller = is_seller
         user_obj.set_password(password)    # change user password
         user_obj.save(using=self._db)
         return user_obj
