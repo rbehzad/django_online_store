@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import render, redirect
 
 from shop_managing.models import Shop
 
@@ -16,19 +17,10 @@ from shop_managing.models import Shop
 #         return render(request, 'index.html', {'images':images})
 
 
-# class HomeListView(ListView):
-#     model = Shop
-#     template_name = 'accounts/index.html'
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context['myshops'] = Shop.objects.filter(user=request.user).order_by('-created_at')
-#         return context
-
-
 class MyShopList(LoginRequiredMixin, ListView):
     model = Shop
     context_object_name = 'shops'
-    template_name = 'shop_managing/index.html'
+    template_name = 'shop_managing/shop_dashboard.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -44,3 +36,14 @@ class MyShopList(LoginRequiredMixin, ListView):
 
         return context
 
+def deleteShop(request, slug):
+    page = 'shop'
+    shop = Shop.objects.get(slug=slug)
+    context = {
+        'page': page,
+    }
+    if request.method == 'POST': # confirming delete
+        shop.status = 'Deleted'
+        shop.save()
+        return redirect('shop_home')
+    return render(request, 'shop_managing/delete_confirm.html', context)
