@@ -3,9 +3,12 @@ from django.db.models.base import Model
 from django.db.models.deletion import CASCADE
 from accounts.models import User
 from shop_managing.models import *
+from online_store.utils import unique_slug_generator
+from django.db.models.signals import pre_save
 
 
 class Cart(models.Model):
+    slug = models.SlugField(unique=True, max_length=120, null=True, blank=True)
     STATUS_CHOICES = {
         ('pending', 'Pending'),
         ('confirmed', 'Confirmed'),
@@ -21,6 +24,9 @@ class Cart(models.Model):
     total_cost = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        unique_together = ('user', 'slug')
+
     def __str__(self):
         return f"Cart:{self.user.fullname}"
 
@@ -30,5 +36,13 @@ class CartItem(models.Model):
     product = models.OneToOneField(Product, on_delete=CASCADE)
     amount = models.IntegerField(default=1)
 
+
     def __str__(self):
         return f"CartItem:{self.product.title}"
+
+
+def slug_generator(sender, instance, *args, **kwargs):
+    if not instance.slug:
+        instance.slug = unique_slug_generator(instance)
+
+pre_save.connect(slug_generator, sender=Cart)

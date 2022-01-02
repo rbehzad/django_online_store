@@ -48,27 +48,28 @@ class TagFilter(SimpleListFilter):
 
 
 # there is no shoptype field in Product model and because of that we wrote seperatly code then add to it
-class ShopTypeFilter(SimpleListFilter):
-    title = 'ShopType Filter'
-    parameter_name = 'product_shoptype'
-    shoptypes = ShopType.objects.all()
-    shoptype_list = []
-    for shoptype in shoptypes:
-        shoptype_list.append((shoptype.title, shoptype.title,))
+# class ShopTypeFilter(SimpleListFilter):
+#     title = 'ShopType Filter'
+#     parameter_name = 'product_shoptype'
+#     shoptypes = ShopType.objects.all()
+#     shoptype_list = []
+#     for shoptype in shoptypes:
+#         shoptype_list.append((shoptype.title, shoptype.title,))
 
-    def lookups(self, request, model_admin):
-        return tuple(ShopTypeFilter.shoptype_list)
+#     def lookups(self, request, model_admin):
+#         return tuple(ShopTypeFilter.shoptype_list)
 
-    def queryset(self, request, queryset):
-        if not self.value():
-            return queryset
+#     def queryset(self, request, queryset):
+#         if not self.value():
+#             return queryset
 
-        for shoptype in ShopTypeFilter.shoptype_list:
-            if self.value().lower() == shoptype[0]:
-                return queryset.filter(shop__shop_type__title=shoptype[0])
+#         for shoptype in ShopTypeFilter.shoptype_list:
+#             if self.value().lower() == shoptype[0]:
+#                 return queryset.filter(shop__shop_type__title=shoptype[0])
 
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('admin_image', 'title', 'shop', 'amount')
-    list_filter = ('shop', TagFilter, ShopTypeFilter)
+    # list_filter = ('shop', TagFilter, ShopTypeFilter)
+    list_filter = ('shop', TagFilter)
     search_fields = ('title',)
 admin.site.register(Product, ProductAdmin)
