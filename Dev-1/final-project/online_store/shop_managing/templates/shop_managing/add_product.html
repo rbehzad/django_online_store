@@ -2,8 +2,10 @@
 
 
 {% block middlepage %}
-<form method="POST" action="">
+<form method="POST" action="" enctype="multipart/form-data">
     {% csrf_token %}
+    {{ form.media }}
+  
     <div class="col-12">
       <label for="yourName" class="form-label">Title:</label>
       {{ form.title }}
@@ -34,6 +36,13 @@
         {{ form.amount }}
         <div class="invalid-feedback">Please, enter amount of product!</div>
     </div>
+    <div class="col-12 my-4">
+      <label for="yourName" class="form-label">Image:</label>
+      {{ form.image }}
+      <div class="invalid-feedback">Please, choose image!</div>
+    </div>
+    
+
     <div class="col-3 my-4">
       <button class="btn btn-primary w-100" type="submit">Add Product</button>
     </div>
