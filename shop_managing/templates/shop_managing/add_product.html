@@ -1,0 +1,50 @@
+{% extends "shop_managing/shop.html" %}
+
+
+{% block middlepage %}
+<form method="POST" action="" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.media }}
+  
+    <div class="col-12">
+      <label for="yourName" class="form-label">Title:</label>
+      {{ form.title }}
+      <div class="invalid-feedback">Please, enter title!</div>
+    </div>
+    <div class="col-12">
+      <label for="yourName" class="form-label">Description:</label>
+      {{ form.description }}
+      <div class="invalid-feedback">Please, enter description!</div>
+    </div>
+    <div class="col-12">
+        <label for="yourName" class="form-label">Price:</label>
+        {{ form.price }}
+        <div class="invalid-feedback">Please, enter price!</div>
+    </div>
+    <div class="col-12">
+        <label for="yourName" class="form-label">Tag:</label>
+        {{ form.tag }}
+        <div class="invalid-feedback">Please, choose tag!</div>
+    </div>
+    <div class="col-12">
+        <label for="yourName" class="form-label">Shop:</label>
+        {{ form.shop }}
+        <div class="invalid-feedback">Please, choose shop!</div>
+    </div>
+    <div class="col-12">
+        <label for="yourName" class="form-label">Amount:</label>
+        {{ form.amount }}
+        <div class="invalid-feedback">Please, enter amount of product!</div>
+    </div>
+    <div class="col-12 my-4">
+      <label for="yourName" class="form-label">Image:</label>
+      {{ form.image }}
+      <div class="invalid-feedback">Please, choose image!</div>
+    </div>
+    
+
+    <div class="col-3 my-4">
+      <button class="btn btn-primary w-100" type="submit">Add Product</button>
+    </div>
+</form>
+{% endblock middlepage %}

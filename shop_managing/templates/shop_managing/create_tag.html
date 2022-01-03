@@ -1,0 +1,17 @@
+{% extends "shop_managing/shop.html" %}
+
+
+{% block middlepage %}
+<form method="POST" action="">
+    {% csrf_token %}
+    <div class="col-12">
+      <label for="yourName" class="form-label">Tag Title:</label>
+      {{ form.title }}
+      <div class="invalid-feedback">Please, enter tag title!</div>
+    </div>
+
+    <div class="col-3 my-4">
+      <button class="btn btn-primary w-100" type="submit">Create Tag</button>
+    </div>
+</form>
+{% endblock middlepage %}

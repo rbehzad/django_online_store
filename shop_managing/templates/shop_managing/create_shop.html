@@ -1,0 +1,22 @@
+{% extends "shop_managing/shop.html" %}
+
+
+{% block middlepage %}
+<form method="POST" action="">
+    {% csrf_token %}
+    <div class="col-12">
+      <label for="yourName" class="form-label">Shop Title:</label>
+      {{ form.title }}
+      <div class="invalid-feedback">Please, enter shop title!</div>
+    </div>
+    <div class="col-12">
+      <label for="yourName" class="form-label">Shop Type:</label>
+      {{ form.shop_type }}
+      <div class="invalid-feedback">Please, choose shop type!</div>
+    </div>
+    
+    <div class="col-3 my-4">
+      <button class="btn btn-primary w-100" type="submit">Create Shop</button>
+    </div>
+</form>
+{% endblock middlepage %}

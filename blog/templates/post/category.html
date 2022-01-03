@@ -1,0 +1,39 @@
+{% extends "post/class_base.html" %}
+{% load static %}
+
+
+{% block title %}
+  post of {{category_name}} category
+{% endblock title %}
+
+{% block menu %}
+{% if request.user.is_authenticated %}
+<ul>
+    <li><a href="{% url 'home' %}">Home</a></li>
+    <li><a href="{% url 'contact' %}">Contact me</a></li>
+    <li><a href="{% url 'add_post' %}">Add New Post</a></li>
+    <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+    <li><a href="{% url 'logout' %}">Logout</a></li>
+</ul>
+
+{% else %}
+<ul>
+    <li><a href="{% url 'home' %}">Home</a></li>
+    <li><a href="{% url 'contact' %}">Contact me</a></li>
+    <li><a href="{% url 'login' %}">Login</a></li>
+    {# <li><a href="{% url 'register' %}">Register</a></li> #}
+</ul>
+{% endif %}
+
+{% endblock menu %}
+
+
+{% block content %} 
+  {% for post in posts %}
+    <div class="postbody">"
+    <a href="{% url 'post_detail' post.slug %}"><h1>{{post.title}}</h1></a><br><br>
+    <div class="publish_info">Author: {{post.author.get_full_name}} ··· Post Date: {{post.created_at}} ··· Categories: <a href="#">{% for category_ in post.category.all %}{{category_.title}}--{% endfor %}</a></div><br>
+    <div class="comment"><a href="#">Comments ({{post.comment_set.count}})</a></div>
+    </div>
+  {% endfor %}
+{% endblock content %}
