@@ -9,6 +9,7 @@ from online_store.mixins import NextUrlMixin, RequestFormAttachMixin
 from .models import User
 from django.contrib.auth import login, logout, views as auth_views
 
+
 class RegisterView(CreateView):
     form_class = RegisterForm
     template_name = 'accounts/pages-register.html'

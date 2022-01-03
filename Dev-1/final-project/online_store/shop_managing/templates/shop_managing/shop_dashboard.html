@@ -116,7 +116,7 @@
             <th scope="row"><a href="#">{{ shop.title }}</a></th>
             <td>{{ shop.shop_type }}</td>
             <td>{{ shop.status }}</td>
-            <td><a href="#">|||||</a></td>
+            <td><a href="{% url 'update_shop' shop.slug %}">|||||</a></td>
             <td><a href="{% url 'delete_shop' shop.slug %}">|||||</a></td>
         </tr>
 
