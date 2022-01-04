@@ -86,43 +86,8 @@ class AddProduct(CreateView):
             product = form.save(commit=False)
             product.save()
             form.save_m2m()
-            return render(request, 'shop_managing/add_product.html', {'form': form})
+            return render(request, 'shop_managing/shop_dashboard.html', {'form': form})
         return render(request, 'shop_managing/add_product.html', {'form': form})
-
-
-# def DeleteShop(request, slug):
-#     page = 'shop'
-#     shop = Shop.objects.get(slug=slug)
-#     context = {
-#         'page': page,
-#     }
-#     if request.method == 'POST': # confirmation deleting
-#         shop.status = 'Deleted'
-#         shop.save()
-#         if not Shop.objects.filter(user=request.user).exclude(status='Deleted').exists():
-#             request.user.seller = False
-#             request.user.save()
-#         return redirect('shop_home')
-#     return render(request, 'shop_managing/delete_confirm.html', context)
-
-# class DeleteShopConfirm(View):
-#     def post(self, request, *args, **kwargs):
-#         shop = Shop.objects.get(slug=slug)
-#         shop.status = 'Deleted'
-#         shop.save()
-#         if not Shop.objects.filter(user=request.user).exclude(status='Deleted').exists():
-#             request.user.seller = False
-#             request.user.save()
-
-#         return render(request, 'shop_managing/add_product.html', {})
-
-# class DeleteShop(DeleteView):
-#     model = Shop
-#     def delete(self, request, *args, **kwargs):
-#         self.object = self.get_object()
-#         self.object.status = 'Deleted'
-#         self.object.save()
-#         return redirect('shop_managing/shop_dashboard.html')
 
 
 class DeleteShop(View):
@@ -138,12 +103,25 @@ class DeleteShop(View):
         return render(request, "shop_managing/delete_confirm.html", {'page': 'shop'})
 
 
-class CartList(LoginRequiredMixin, ListView):
+class CartList(ListView):
     model = Cart
-    context_object_name = 'shops'
-    template_name = 'shop_managing/shop_dashboard.html'
+    context_object_name = 'carts'
+    template_name = 'shop_managing/cart_list.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['shops'] = Shop.objects.filter(user=self.request.user).exclude(status='Deleted')
+        context['carts'] = Cart.objects.filter(shop__slug=self.kwargs['slug'])
         return context
+
+
+# class DeleteCart(View):
+#     model = Cart
+#     def post(self, request, *args, **kwargs):
+#         shop = Shop.objects.get(slug=self.kwargs['slug'])
+#         shop.status = 'Deleted'
+#         shop.save()
+#         return render(request, "shop_managing/shop_dashboard.html", {})
+
+#     def get(self, request, *args, **kwargs):
+#         shop = Shop.objects.get(slug=self.kwargs['slug'])
+#         return render(request, "shop_managing/delete_confirm.html", {'page': 'shop'})

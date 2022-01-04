@@ -36,9 +36,6 @@
 </div><!-- End Reports -->
 
 
-
-
-
 <!-- My Shop List -->
 <div class="col-12">
 <div class="card top-selling">
@@ -60,7 +57,7 @@
         {% for shop in shops %}
         
         <tr>
-            <th scope="row"><a href="#">{{ shop.title }}</a></th>
+            <th scope="row"><a href="{% url 'cart_list' shop.slug %}">{{ shop.title }}</a></th>
             <td>{{ shop.shop_type }}</td>
             <td>{{ shop.status }}</td>
             <td><a href="{% url 'update_shop' shop.slug %}">|||||</a></td>

@@ -23,6 +23,7 @@ class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=CASCADE)
     total_cost = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
+    shop = models.ForeignKey(Shop, on_delete=SET_NULL, null=True)
 
     class Meta:
         unique_together = ('user', 'slug')
