@@ -73,16 +73,19 @@ class UpdateShop(UpdateView):
 
 
 class AddProduct(CreateView):
-    model = Product
-    form_class = AddProductForm
-    template_name = 'shop_managing/add_product.html'
-    success_url = reverse_lazy('shop_home')
+    def get(self, request, *args, **kwargs):
+        form = AddProductForm(user=request.user)
+        return render(request, 'shop_managing/add_product.html', {'form':form})
 
-    def form_valid(self, form):
-        shop = form.save(commit=False)
-        shop.user = self.request.user
-        shop.save()
-        return redirect('shop_home')
+    def post(self, request, *args, **kwargs):
+        form = AddProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            product = form.save(commit=False)
+            product.save()
+            form.save_m2m()
+            return render(request, 'shop_managing/add_product.html', {'form': form})
+        return render(request, 'shop_managing/add_product.html', {'form': form})
+
 
 
 # class DeletePostView(LoginRequiredMixin, DeleteView):

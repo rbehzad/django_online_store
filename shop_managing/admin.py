@@ -14,7 +14,7 @@ admin.site.register(Tag, TagAdmin)
 
 class ShopAdmin(admin.ModelAdmin):
     models = Shop
-    list_display = ('id', 'status', 'title', 'shop_type', 'created_at')
+    list_display = ('id', 'user', 'status', 'title', 'shop_type', 'created_at')
     list_filter = ('status', 'shop_type')
     search_fields = ('title',)
     list_editable = ('status',)
