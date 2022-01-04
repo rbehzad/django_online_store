@@ -30,6 +30,7 @@ class AddProductForm(forms.ModelForm):
     def __init__(self, user, *args, **kwargs):
         super (AddProductForm, self ).__init__(*args, **kwargs)
         self.fields['shop'].queryset = Shop.objects.filter(user=user).filter(status='Confirmed')
+        
 
     class Meta:
         model = Product
