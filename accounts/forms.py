@@ -63,7 +63,7 @@ class UserAdminChangeForm(forms.ModelForm):
 class RegisterForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email', 'phone_number', 'password1', 'password2', 'seller']
+        fields = ['first_name', 'last_name', 'email', 'phone_number', 'password1', 'password2']
 
     def __init__(self, *args, **kwargs):
         super(RegisterForm, self).__init__(*args, **kwargs)
@@ -79,8 +79,6 @@ class RegisterForm(UserCreationForm):
             {'class': 'form-control', 'placeholder': 'Enter password...'})
         self.fields['password2'].widget.attrs.update(
             {'class': 'form-control', 'placeholder': 'Confirm password...'})
-        self.fields['seller'].widget.attrs.update(
-            {'class': 'form-check-input', 'type': "checkbox", 'value':""})
 
 class GuestForm(forms.Form):
     email = forms.EmailField(

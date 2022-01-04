@@ -8,12 +8,13 @@ from django.views.generic import CreateView, FormView, DetailView, View, UpdateV
 from online_store.mixins import NextUrlMixin, RequestFormAttachMixin
 from .models import User
 from django.contrib.auth import login, logout, views as auth_views
+from django.urls import reverse_lazy
 
 
 class RegisterView(CreateView):
     form_class = RegisterForm
     template_name = 'accounts/pages-register.html'
-    success_url = '/pages-login/'
+    success_url = reverse_lazy('shop_home')
 
 
 def LoginView(request):
@@ -33,10 +34,10 @@ def LoginView(request):
         return render(request, 'accounts/pages-login.html', {'page': 'login'})
 
 
-# class log_out(View):
-#     def get(self, request):
-#         logout(request)
-#         return redirect('shop:home')
+class LogoutView(View):
+    def get(self, request):
+        logout(request)
+        return redirect('shop_login')
 
 
 def guest_register_view(request):

@@ -18,5 +18,12 @@
     <div class="col-3 my-4">
       <button class="btn btn-primary w-100" type="submit">Create Shop</button>
     </div>
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}><span style="color: red;">{{ message }}</span></li>
+        {% endfor %}
+    </ul>
+    {% endif %}
 </form>
 {% endblock middlepage %}

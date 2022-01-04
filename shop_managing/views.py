@@ -33,7 +33,8 @@ class MyShopList(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['shops'] = context['shops'].filter(user=self.request.user).exclude(status='Deleted')
+        # context['shops'] = context['shops'].filter(user=self.request.user).exclude(status='Deleted')
+        context['shops'] = Shop.objects.filter(user=self.request.user).exclude(status='Deleted')
         # context['count'] = context['tasks'].filter(complete=False).count()
         return context
 
@@ -45,12 +46,14 @@ class CreateShop(CreateView):
 
     def form_valid(self, form):
         if Shop.objects.filter(user=self.request.user).filter(status='Pending'):
-            messages.error(self.request, 'Your account is about to expire.')
+            messages.error(self.request, 'Your are not allowed to create new shop till the last shop get confirmed.')
             return redirect('create_shop')
 
         shop = form.save(commit=False)
         shop.user = self.request.user
         shop.save()
+        self.request.user.seller = True
+        self.request.user.save()
         return redirect('shop_home')
 
 
@@ -97,5 +100,9 @@ def deleteShop(request, slug):
     if request.method == 'POST': # confirming delete
         shop.status = 'Deleted'
         shop.save()
+        if not Shop.objects.filter(user=request.user).exclude(status='Deleted').exists():
+            request.user.seller = False
+            request.user.save()
+
         return redirect('shop_home')
     return render(request, 'shop_managing/delete_confirm.html', context)
