@@ -66,12 +66,17 @@ class CreateTag(CreateView):
     success_url = reverse_lazy('shop_home')
 
 
-
 class UpdateShop(UpdateView):
     model = Shop
     form_class = CreateShopForm
     template_name = 'shop_managing/create_shop.html'
-    success_url = reverse_lazy('shop_home')
+
+    def form_valid(self, form):
+        shop = form.save(commit=False)
+        shop.user = self.request.user
+        shop.status = 'Pending'
+        shop.save()
+        return redirect('shop_home')
 
 
 class AddProduct(CreateView):
