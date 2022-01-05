@@ -1,6 +1,10 @@
 {% extends "shop_managing/shop.html" %}
 
 
+{% block page_title %}
+Create Tag
+{% endblock page_title %}
+
 {% block middlepage %}
 <form method="POST" action="">
     {% csrf_token %}
