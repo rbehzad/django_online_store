@@ -8,6 +8,8 @@ from django.db.models.signals import pre_save
 
 
 class Cart(models.Model):
+    user = models.ForeignKey(User, on_delete=CASCADE)
+    title = 'cart'
     slug = models.SlugField(unique=True, max_length=120, null=True, blank=True)
     STATUS_CHOICES = {
         ('pending', 'Pending'),
@@ -20,7 +22,7 @@ class Cart(models.Model):
         choices=STATUS_CHOICES,
         default='pending',
     )
-    user = models.ForeignKey(User, on_delete=CASCADE)
+    
     total_cost = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     shop = models.ForeignKey(Shop, on_delete=SET_NULL, null=True)
@@ -29,7 +31,7 @@ class Cart(models.Model):
         unique_together = ('user', 'slug')
 
     def __str__(self):
-        return f"Cart:{self.user.fullname}"
+        return f"Cart:{self.user}"
 
 
 class CartItem(models.Model):

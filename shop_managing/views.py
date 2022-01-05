@@ -7,6 +7,7 @@ from django.urls import reverse_lazy, reverse
 from .forms import *
 from .models import *
 from shopping.models import *
+from blog.models import Post
 from django.views.generic import (
     ListView,
     TemplateView,
@@ -110,8 +111,14 @@ class CartList(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['carts'] = Cart.objects.filter(shop__slug=self.kwargs['slug'])
+        context['carts'] = Cart.objects.filter(shop__slug=self.kwargs['slug']).order_by('created_at')
         return context
+
+
+def shop_base(request):
+    context = {'carts': Cart.objects.filter(shop__user=request.user),
+               'posts': Post.objects.filter(author=request.user)}
+    return context
 
 
 # class DeleteCart(View):
