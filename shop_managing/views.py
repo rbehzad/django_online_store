@@ -116,6 +116,17 @@ class CartList(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['carts'] = Cart.objects.filter(shop__slug=self.kwargs['slug']).order_by('created_at')
+        context['shop'] = Shop.objects.get(slug=self.kwargs['slug'])
+        return context
+
+class CartDetail(ListView):
+    model = CartItem
+    template_name = 'shop_managing/cart_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['items'] = CartItem.objects.filter(cart__slug=self.kwargs['slug'])
+        context['cart'] = Cart.objects.get(slug=self.kwargs['slug'])
         return context
 
 

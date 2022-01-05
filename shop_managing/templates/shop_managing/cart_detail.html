@@ -12,23 +12,23 @@ Carts List
     <div class="card top-selling">
     
         <div class="card-body pb-0">
-        <h5 class="card-title">{{ shop.title }} Carts</h5>
+        <h5 class="card-title">Cart Items</h5>
     
         <table class="table table-borderless">
             <thead>
             <tr>
-                <th scope="col">User</th>
-                <th scope="col">Status</th>
+                <th scope="col">Items</th>
+                <th scope="col">Price</th>
+                <th scope="col">Amount</th>
             </tr>
             </thead>
             <tbody>
-            {% for cart in carts %}
-            
+            {% for item in items %}
             <tr>
-                <th scope="row"><a href="{% url 'cart_detail' cart.slug %}">{{ cart.user }}</a></th>
-                <td>{{ cart.status }}</td>
+                <td>{{ item.product.title }}</td>
+                <td>{{ item.product.price }}</td>
+                <td>{{ item.amount }}</td>
             </tr>
-    
             {% endfor %}
             </tbody>
         </table>
