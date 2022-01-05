@@ -37,9 +37,7 @@ class MyShopList(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # context['shops'] = context['shops'].filter(user=self.request.user).exclude(status='Deleted')
         context['shops'] = Shop.objects.filter(user=self.request.user).exclude(status='Deleted')
-        # context['count'] = context['tasks'].filter(complete=False).count()
         return context
 
 
@@ -87,7 +85,8 @@ class AddProduct(CreateView):
             product = form.save(commit=False)
             product.save()
             form.save_m2m()
-            return render(request, 'shop_managing/shop_dashboard.html', {'form': form})
+            return redirect('shop_home')
+
         return render(request, 'shop_managing/add_product.html', {'form': form})
 
 
@@ -97,7 +96,7 @@ class DeleteShop(View):
         shop = Shop.objects.get(slug=self.kwargs['slug'])
         shop.status = 'Deleted'
         shop.save()
-        return render(request, "shop_managing/shop_dashboard.html", {})
+        return redirect('shop_home')
 
     def get(self, request, *args, **kwargs):
         shop = Shop.objects.get(slug=self.kwargs['slug'])
@@ -115,9 +114,22 @@ class CartList(ListView):
         return context
 
 
+class ProductList(ListView):
+    model = Product
+    template_name = 'shop_managing/product_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['products'] = Product.objects.filter(shop__slug=self.kwargs['slug'])
+        context['shop'] = Shop.objects.get(slug=self.kwargs['slug'])
+        return context
+
+
 def shop_base(request):
-    context = {'carts': Cart.objects.filter(shop__user=request.user),
-               'posts': Post.objects.filter(author=request.user)}
+    context = {
+        'carts': Cart.objects.filter(shop__user=request.user),
+        'posts': Post.objects.filter(author=request.user),
+    }
     return context
 
 

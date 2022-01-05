@@ -9,7 +9,7 @@ from django.db.models.signals import pre_save
 
 class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=CASCADE)
-    title = 'cart'
+    title = 'cart1'
     slug = models.SlugField(unique=True, max_length=120, null=True, blank=True)
     STATUS_CHOICES = {
         ('pending', 'Pending'),
@@ -41,7 +41,7 @@ class CartItem(models.Model):
 
 
     def __str__(self):
-        return f"CartItem:{self.product.title}"
+        return self.product.title
 
 
 def slug_generator(sender, instance, *args, **kwargs):

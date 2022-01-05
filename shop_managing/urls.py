@@ -10,5 +10,6 @@ urlpatterns = [
     path('create-tag/', CreateTag.as_view(), name='create_tag'),
     path('add-product/', AddProduct.as_view(), name='add_product'),
     path('cart-list/<slug:slug>', CartList.as_view(), name='cart_list'),
+    path('product-list/<slug:slug>', ProductList.as_view(), name='product_list'),
     # path('delete-cart/<slug:slug>', DeleteCart.as_view(), name='delete_cart'),
 ]

@@ -1,0 +1,43 @@
+{% extends "shop_managing/shop.html" %}
+
+
+{% block middlepage %}
+
+<!-- My Cart List -->
+<div class="col-12">
+    <div class="card top-selling">
+    
+        <div class="card-body pb-0">
+        <h5 class="card-title">{{shop.title}} Products</h5>
+    
+        <table class="table table-borderless">
+            <thead>
+            <tr>
+                <th scope="col">Title</th>
+                <th scope="col">Price</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Image</th>
+                <th scope="col">Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for product in products %}
+            
+            <tr>
+                <td scope="row">{{ product.title }}</td>
+                <td>{{ product.price }}</td>
+                <td>{{ product.amount }}</td>
+                <td><img src="{{product.image.url}}" alt=""></td>
+                <td>{{ product.description}}</td>
+            </tr>
+    
+            {% endfor %}
+            </tbody>
+        </table>
+    
+        </div>
+    
+    </div>
+    </div><!-- End Cart List -->
+
+{% endblock middlepage %}

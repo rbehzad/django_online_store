@@ -26,7 +26,7 @@ class ShopType(models.Model):
         unique_together = ('title', 'slug')
 
     def __str__(self):
-        return f"ShopType:{self.title}"
+        return self.title
 
 
 class Shop(models.Model):

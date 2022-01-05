@@ -47,6 +47,7 @@
         <thead>
         <tr>
             <th scope="col">Title</th>
+            <th scope="col">Carts</th>
             <th scope="col">Shop Type</th>
             <th scope="col">Status</th>
             <th scope="col">Update</th>
@@ -57,7 +58,8 @@
         {% for shop in shops %}
         
         <tr>
-            <th scope="row"><a href="{% url 'cart_list' shop.slug %}">{{ shop.title }}</a></th>
+            <th scope="row"><a href="{% url 'product_list' shop.slug %}">{{ shop.title }}</a></th>
+            <th scope="row"><a href="{% url 'cart_list' shop.slug %}">|||||</a></th>
             <td>{{ shop.shop_type }}</td>
             <td>{{ shop.status }}</td>
             <td><a href="{% url 'update_shop' shop.slug %}">|||||</a></td>
