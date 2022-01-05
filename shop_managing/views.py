@@ -129,6 +129,7 @@ def shop_base(request):
     context = {
         'carts': Cart.objects.filter(shop__user=request.user),
         'posts': Post.objects.filter(author=request.user),
+        'tags': Tag.objects.all(),
     }
     return context
 
