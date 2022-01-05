@@ -77,6 +77,14 @@ class Product(models.Model):
         return f"Product:{self.title}"
 
 
+# class Image(models.Model):
+#     name = models.CharField(max_length=255)
+#     product = models.ForeignKey(Product, on_delete=models.CASCADE)
+#     image = models.ImageField(upload_to='images/')
+#     default = models.BooleanField(default=False)
+
+
+
 def slug_generator(sender, instance, *args, **kwargs):
     if not instance.slug:
         instance.slug = unique_slug_generator(instance)
