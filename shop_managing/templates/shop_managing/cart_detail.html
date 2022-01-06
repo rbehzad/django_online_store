@@ -17,6 +17,7 @@ Carts List
         <table class="table table-borderless">
             <thead>
             <tr>
+                <th scope="col">User</th>
                 <th scope="col">Items</th>
                 <th scope="col">Price</th>
                 <th scope="col">Amount</th>
@@ -25,6 +26,7 @@ Carts List
             <tbody>
             {% for item in items %}
             <tr>
+                <td>{{ cart.user }}</td>
                 <td>{{ item.product.title }}</td>
                 <td>{{ item.product.price }}</td>
                 <td>{{ item.amount }}</td>

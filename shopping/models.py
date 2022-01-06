@@ -9,13 +9,13 @@ from django.db.models.signals import pre_save
 
 class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=CASCADE)
-    title = 'cart1'
+    title = models.CharField(max_length=120, default='cart1')
     slug = models.SlugField(unique=True, max_length=120, null=True, blank=True)
     STATUS_CHOICES = {
-        ('pending', 'Pending'),
-        ('confirmed', 'Confirmed'),
-        ('deleted', 'Deleted'),
-        ('paid', 'Paid'),
+        ('Pending', 'Pending'),
+        ('Confirmed', 'Confirmed'),
+        ('Deleted', 'Deleted'),
+        ('Paid', 'Paid'),
     }
     status = models.CharField(
         max_length=12,
@@ -28,15 +28,15 @@ class Cart(models.Model):
     shop = models.ForeignKey(Shop, on_delete=SET_NULL, null=True)
 
     class Meta:
-        unique_together = ('user', 'slug')
+        unique_together = ('title', 'slug')
 
     def __str__(self):
-        return f"Cart:{self.user}"
+        return f"Cart:{self.title}"
 
 
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=CASCADE)
-    product = models.OneToOneField(Product, on_delete=CASCADE)
+    product = models.ForeignKey(Product, on_delete=CASCADE)
     amount = models.IntegerField(default=1)
 
 

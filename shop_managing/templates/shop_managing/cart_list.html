@@ -17,16 +17,27 @@ Carts List
         <table class="table table-borderless">
             <thead>
             <tr>
-                <th scope="col">User</th>
+                <th scope="col">Title</th>
                 <th scope="col">Status</th>
+                <th scope="col">Detail</th>
             </tr>
             </thead>
             <tbody>
             {% for cart in carts %}
             
             <tr>
-                <th scope="row"><a href="{% url 'cart_detail' cart.slug %}">{{ cart.user }}</a></th>
-                <td>{{ cart.status }}</td>
+                <td scope="row">{{ cart.title }}</td>
+                <td>
+                    <select id="cart_status" name="state">
+                        <option value="Pending"><a href="">{{ cart.status }}</a></option>
+                        {% for stat in status %}
+                            {% if cart.status != stat %}
+                            <option value={{stat}}>{{stat}}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </td>
+                <th scope="row"><a href="{% url 'cart_detail' cart.slug %}">|||||</a></th>
             </tr>
     
             {% endfor %}

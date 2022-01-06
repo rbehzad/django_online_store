@@ -108,16 +108,30 @@ class DeleteShop(View):
         return render(request, "shop_managing/delete_confirm.html", {'page': 'shop'})
 
 
-class CartList(ListView):
-    model = Cart
-    context_object_name = 'carts'
-    template_name = 'shop_managing/cart_list.html'
+# class CartList(ListView):
+#     model = Cart
+#     context_object_name = 'carts'
+#     template_name = 'shop_managing/cart_list.html'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['carts'] = Cart.objects.filter(shop__slug=self.kwargs['slug']).order_by('created_at')
+#         context['shop'] = Shop.objects.get(slug=self.kwargs['slug'])
+#         context['status'] = ['Pending', 'Confirmed', 'Deleted', 'Paid']
+#         return context
+
+
+class CartList(View):
+    model = Cart
+    def get(self, request, *args, **kwargs):
+        context = dict()
         context['carts'] = Cart.objects.filter(shop__slug=self.kwargs['slug']).order_by('created_at')
         context['shop'] = Shop.objects.get(slug=self.kwargs['slug'])
-        return context
+        context['status'] = ['Pending', 'Confirmed', 'Deleted', 'Paid']
+
+        return render(request, 'shop_managing/cart_list.html', context)
+
+
 
 class CartDetail(ListView):
     model = CartItem
