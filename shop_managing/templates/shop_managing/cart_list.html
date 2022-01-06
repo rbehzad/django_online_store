@@ -1,5 +1,19 @@
 {% extends "shop_managing/shop.html" %}
 
+
+
+{% block search %}
+<!-- search -->
+<div class="section">
+<form method="post" action="{% url 'search_cart' shop.slug %}" class="search">
+    {% csrf_token %}
+    <input name="search" type="text" placeholder="Search Cart" id="keyword" />
+    <input type="submit" value="Go" class="button" />
+</form>
+</div>
+{% endblock search %}
+
+
 {% block page_title %}
 Carts List
 {% endblock page_title %}

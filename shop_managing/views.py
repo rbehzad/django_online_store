@@ -17,6 +17,7 @@ from django.views.generic import (
     DeleteView,
     View,
 )
+from django.db.models import Q
 from django.contrib import messages
 
 #### view for image (file field):
@@ -108,19 +109,6 @@ class DeleteShop(View):
         return render(request, "shop_managing/delete_confirm.html", {'page': 'shop'})
 
 
-# class CartList(ListView):
-#     model = Cart
-#     context_object_name = 'carts'
-#     template_name = 'shop_managing/cart_list.html'
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context['carts'] = Cart.objects.filter(shop__slug=self.kwargs['slug']).order_by('created_at')
-#         context['shop'] = Shop.objects.get(slug=self.kwargs['slug'])
-#         context['status'] = ['Pending', 'Confirmed', 'Deleted', 'Paid']
-#         return context
-
-
 class CartList(View):
     model = Cart
     def get(self, request, *args, **kwargs):
@@ -131,6 +119,15 @@ class CartList(View):
 
         return render(request, 'shop_managing/cart_list.html', context)
 
+class SearchCart(View):
+    model = Cart
+    def post(self, request, *args, **kwargs):
+        searched = request.POST['search']
+        context = dict()
+        context['carts'] = Cart.objects.filter(shop__slug=self.kwargs['slug']).filter(title__contains=searched).order_by('created_at')
+        context['shop'] = Shop.objects.get(slug=self.kwargs['slug'])
+        context['status'] = ['Pending', 'Confirmed', 'Deleted', 'Paid']
+        return render(request, 'shop_managing/cart_list.html', context)
 
 
 class CartDetail(ListView):
@@ -175,3 +172,6 @@ def shop_base(request):
 #     def get(self, request, *args, **kwargs):
 #         shop = Shop.objects.get(slug=self.kwargs['slug'])
 #         return render(request, "shop_managing/delete_confirm.html", {'page': 'shop'})
+
+
+
