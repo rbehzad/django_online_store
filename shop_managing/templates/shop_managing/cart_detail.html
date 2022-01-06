@@ -19,8 +19,9 @@ Carts List
             <tr>
                 <th scope="col">User</th>
                 <th scope="col">Items</th>
-                <th scope="col">Price</th>
+                <th scope="col">Item Price</th>
                 <th scope="col">Amount</th>
+                <th scope="col">Total Cost</th>
             </tr>
             </thead>
             <tbody>
@@ -30,8 +31,16 @@ Carts List
                 <td>{{ item.product.title }}</td>
                 <td>{{ item.product.price }}</td>
                 <td>{{ item.amount }}</td>
+                <td>{{ item.total_cost }}</td>
             </tr>
             {% endfor %}
+            <tr>
+                <th>Total:</th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <th>{{ cart.total_cost }}</th>
+            </tr>
             </tbody>
         </table>
     
