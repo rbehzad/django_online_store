@@ -23,44 +23,62 @@ Carts List
 
 <!-- My Cart List -->
 <div class="col-12">
-    <div class="card top-selling">
-    
-        <div class="card-body pb-0">
-        <h5 class="card-title">{{ shop.title }} Carts</h5>
-    
-        <table class="table table-borderless">
-            <thead>
-            <tr>
-                <th scope="col">Title</th>
-                <th scope="col">Status</th>
-                <th scope="col">Detail</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for cart in carts %}
-            
-            <tr>
-                <td scope="row">{{ cart.title }}</td>
-                <td>
-                    <select id="cart_status" name="state">
-                        <option value="Pending"><a href="">{{ cart.status }}</a></option>
-                        {% for stat in status %}
-                            {% if cart.status != stat %}
-                            <option value={{stat}}>{{stat}}</option>
-                            {% endif %}
-                        {% endfor %}
-                    </select>
-                </td>
-                <th scope="row"><a href="{% url 'cart_detail' cart.slug %}">|||||</a></th>
-            </tr>
-    
-            {% endfor %}
-            </tbody>
-        </table>
-    
-        </div>
-    
-    </div>
-    </div><!-- End Cart List -->
+<div class="card top-selling">
 
+    <div class="card-body pb-0">
+    <h5 class="card-title">{{ shop.title }} Carts</h5>
+
+    <table class="table table-borderless">
+        <thead>
+        <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Status</th>
+            <th scope="col">Change Status</th>
+            <th scope="col">Detail</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for cart in carts %}
+        
+        <tr>
+            <td scope="row">{{ cart.title }}</td>
+            <td>{{ cart.status }}</td>
+            <td>
+                <ul>
+                    <li><a href="{% url 'change_cart_status' cart.slug 'Pending' %}">Pending</a></li>
+                    <li><a href="{% url 'change_cart_status' cart.slug 'Confirmed' %}">Confirmed</a></li>
+                    <li><a href="{% url 'change_cart_status' cart.slug 'Deleted' %}">Deleted</a></li>
+                    <li><a href="{% url 'change_cart_status' cart.slug 'Paid' %}">Paid</a></li>
+                 </ul>
+            </td>
+
+            <th scope="row"><a href="{% url 'cart_detail' cart.slug %}">|||||</a></th>
+        </tr>
+
+        {% endfor %}
+        </tbody>
+    </table>
+
+    </div>
+
+</div>
+</div><!-- End Cart List -->
 {% endblock middlepage %}
+
+  
+{% block cart_filter %}
+<div class="card">
+<div class="card-body pb-0">
+    <h5 class="card-title">Cart Filter </span></h5>
+
+    <div>
+    <div class="post-item clearfix">
+        <div><a href="{% url 'filter_cart' shop.slug 'Pending' %}">Pending</a></div>
+        <div><a href="{% url 'filter_cart' shop.slug 'Confirmed' %}">Confirmed</a></div>
+        <div><a href="{% url 'filter_cart' shop.slug 'Deleted' %}">Deleted</a></div>
+        <div><a href="{% url 'filter_cart' shop.slug 'Paid' %}">Paid</a></div>
+    </div>
+    </div>
+</div>
+</div>
+{% endblock cart_filter %}

@@ -22,6 +22,7 @@ def LoginView(request):
         return redirect('shop_home')
     else:
         if request.method == 'POST':
+            print('testtttttttttttttttt')
             username = request.POST['email']
             password = request.POST['password']
             # if user authenticated below function return user object
@@ -31,7 +32,7 @@ def LoginView(request):
                 login(request, user)
                 return redirect('shop_home')
 
-        return render(request, 'accounts/pages-login.html', {'page': 'login'})
+        return render(request, 'accounts/pages-login.html')
 
 
 class LogoutView(View):

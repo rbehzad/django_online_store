@@ -99,13 +99,6 @@
 
       <li class="nav-item">
         <a class="nav-link collapsed" href="#">
-          <i class="bi bi-person"></i>
-          <span>Profile</span>
-        </a>
-      </li><!-- End Profile Page Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="#">
           <i class="bi bi-question-circle"></i>
           <span>F.A.Q</span>
         </a>
@@ -156,6 +149,10 @@
         <!-- Right side columns -->
         <div class="col-lg-4">
   
+          {% block cart_filter %}
+          
+          {% endblock cart_filter %}
+
           <!-- Budget Report -->
           <div class="card">
             <div class="card-body pb-0">
@@ -238,6 +235,7 @@
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
   <script src="{% static 'shop_managing/main.js' %}"></script>
 
+  
 </body>
 
 </html>

@@ -85,7 +85,7 @@ WSGI_APPLICATION = 'online_store.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres1',
+        'NAME': 'postgres4',
     }
 }
 
