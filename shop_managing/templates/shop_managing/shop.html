@@ -162,7 +162,7 @@
                 {% for cart in carts %}
                 <div class="post-item clearfix">
                   <span>{{ cart }}</span>
-                  <h4>price: {{ cart.total_cost }}</h4>
+                  <h4>price: {{ cart.get_total_price }}</h4>
                 </div>
                 {% endfor %}
       

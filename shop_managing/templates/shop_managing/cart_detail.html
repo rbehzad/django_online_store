@@ -31,7 +31,7 @@ Carts List
                 <td>{{ item.product.title }}</td>
                 <td>{{ item.product.price }}</td>
                 <td>{{ item.amount }}</td>
-                <td>{{ item.total_cost }}</td>
+                <td>{{ item.get_cost }}</td>
             </tr>
             {% endfor %}
             <tr>
@@ -39,7 +39,7 @@ Carts List
                 <td></td>
                 <td></td>
                 <td></td>
-                <th>{{ cart.total_cost }}</th>
+                <th>{{ cart.get_total_price }}</th>
             </tr>
             </tbody>
         </table>

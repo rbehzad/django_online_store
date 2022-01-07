@@ -33,9 +33,12 @@ class Cart(models.Model):
     def __str__(self):
         return f"Cart:{self.title}"
 
+    def get_total_price(self):
+        return sum(item.get_cost() for item in self.cart_item.all())
+
 
 class CartItem(models.Model):
-    cart = models.ForeignKey(Cart, on_delete=CASCADE)
+    cart = models.ForeignKey(Cart, on_delete=CASCADE, related_name='cart_item')
     product = models.ForeignKey(Product, on_delete=CASCADE)
     amount = models.IntegerField(default=1)
     total_cost = models.IntegerField(default=0)
@@ -43,9 +46,12 @@ class CartItem(models.Model):
     def __str__(self):
         return self.product.title
 
+    def get_cost(self):
+        return self.amount * self.product.price
 
 def slug_generator(sender, instance, *args, **kwargs):
     if not instance.slug:
         instance.slug = unique_slug_generator(instance)
+
 
 pre_save.connect(slug_generator, sender=Cart)
