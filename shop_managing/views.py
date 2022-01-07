@@ -151,11 +151,15 @@ class SearchCart(LoginRequiredMixin, View):
 class FilterCart(LoginRequiredMixin, View):
     model = Cart
     def get(self, request, *args, **kwargs):
-        context = {
-            'carts': Cart.objects.filter(shop__slug=self.kwargs['slug']).filter(status=self.kwargs['status']).order_by('created_at'),
-            'shop': Shop.objects.get(slug=self.kwargs['slug']),
-            'status': ['Pending', 'Confirmed', 'Deleted', 'Paid']
-        }
+        context = dict()
+        context['shop'] = Shop.objects.get(slug=self.kwargs['slug'])
+        context['status'] = ['Pending', 'Confirmed', 'Deleted', 'Paid']
+
+        if self.kwargs['status'] == 'All':
+            context['carts'] = Cart.objects.filter(shop__slug=self.kwargs['slug']).order_by('created_at')
+        else:
+            context['carts'] = Cart.objects.filter(shop__slug=self.kwargs['slug']).filter(status=self.kwargs['status']).order_by('created_at')
+
         return render(request, 'shop_managing/cart_list.html', context)
 
 

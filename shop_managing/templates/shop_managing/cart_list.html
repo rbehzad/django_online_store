@@ -44,12 +44,17 @@ Carts List
             <td scope="row">{{ cart.title }}</td>
             <td>{{ cart.status }}</td>
             <td>
-                <ul>
-                    <li><a href="{% url 'change_cart_status' cart.slug 'Pending' %}">Pending</a></li>
-                    <li><a href="{% url 'change_cart_status' cart.slug 'Confirmed' %}">Confirmed</a></li>
-                    <li><a href="{% url 'change_cart_status' cart.slug 'Deleted' %}">Deleted</a></li>
-                    <li><a href="{% url 'change_cart_status' cart.slug 'Paid' %}">Paid</a></li>
-                 </ul>
+                {% if cart.status == 'Paid' %}
+                <span><a href="{% url 'change_cart_status' cart.slug 'Deleted' %}">Deleted</a></span>
+                {% elif  cart.status == 'Pending' %}
+                <span><a href="{% url 'change_cart_status' cart.slug 'Confirmed' %}">Confirmed</a></span> /
+                <span><a href="{% url 'change_cart_status' cart.slug 'Deleted' %}">Deleted</a></span>
+                {% elif cart.status == 'Confirmed' %}
+                <span><a href="{% url 'change_cart_status' cart.slug 'Paid' %}">Paid</a></span> /
+                <span><a href="{% url 'change_cart_status' cart.slug 'Deleted' %}">Deleted</a></span>
+                {% elif cart.status == 'Deleted' %}
+                <span><a href="{% url 'change_cart_status' cart.slug 'Pending' %}">Pending</a></span>
+                {% endif %}
             </td>
 
             <th scope="row"><a href="{% url 'cart_detail' cart.slug %}">|||||</a></th>
@@ -73,6 +78,7 @@ Carts List
 
     <div>
     <div class="post-item clearfix">
+        <div><a href="{% url 'filter_cart' shop.slug 'All' %}">All</a></div>
         <div><a href="{% url 'filter_cart' shop.slug 'Pending' %}">Pending</a></div>
         <div><a href="{% url 'filter_cart' shop.slug 'Confirmed' %}">Confirmed</a></div>
         <div><a href="{% url 'filter_cart' shop.slug 'Deleted' %}">Deleted</a></div>
