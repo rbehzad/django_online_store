@@ -70,7 +70,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'shop_managing.views.shop_base',
+                # 'shop_managing.views.shop_base',
             ],
         },
     },
