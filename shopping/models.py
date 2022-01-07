@@ -14,7 +14,7 @@ class Cart(models.Model):
     STATUS_CHOICES = {
         ('Pending', 'Pending'),
         ('Confirmed', 'Confirmed'),
-        ('Deleted', 'Deleted'),
+        ('Canceled', 'Canceled'),
         ('Paid', 'Paid'),
     }
     status = models.CharField(

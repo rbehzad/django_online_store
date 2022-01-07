@@ -45,14 +45,14 @@ Carts List
             <td>{{ cart.status }}</td>
             <td>
                 {% if cart.status == 'Paid' %}
-                <span><a href="{% url 'change_cart_status' cart.slug 'Deleted' %}">Deleted</a></span>
+                <span><a href="{% url 'change_cart_status' cart.slug 'Canceled' %}">Canceled</a></span>
                 {% elif  cart.status == 'Pending' %}
                 <span><a href="{% url 'change_cart_status' cart.slug 'Confirmed' %}">Confirmed</a></span> /
-                <span><a href="{% url 'change_cart_status' cart.slug 'Deleted' %}">Deleted</a></span>
+                <span><a href="{% url 'change_cart_status' cart.slug 'Canceled' %}">Canceled</a></span>
                 {% elif cart.status == 'Confirmed' %}
                 <span><a href="{% url 'change_cart_status' cart.slug 'Paid' %}">Paid</a></span> /
-                <span><a href="{% url 'change_cart_status' cart.slug 'Deleted' %}">Deleted</a></span>
-                {% elif cart.status == 'Deleted' %}
+                <span><a href="{% url 'change_cart_status' cart.slug 'Canceled' %}">Canceled</a></span>
+                {% elif cart.status == 'Canceled' %}
                 <span><a href="{% url 'change_cart_status' cart.slug 'Pending' %}">Pending</a></span>
                 {% endif %}
             </td>
@@ -81,7 +81,7 @@ Carts List
         <div><a href="{% url 'filter_cart' shop.slug 'All' %}">All</a></div>
         <div><a href="{% url 'filter_cart' shop.slug 'Pending' %}">Pending</a></div>
         <div><a href="{% url 'filter_cart' shop.slug 'Confirmed' %}">Confirmed</a></div>
-        <div><a href="{% url 'filter_cart' shop.slug 'Deleted' %}">Deleted</a></div>
+        <div><a href="{% url 'filter_cart' shop.slug 'Canceled' %}">Canceled</a></div>
         <div><a href="{% url 'filter_cart' shop.slug 'Paid' %}">Paid</a></div>
     </div>
     </div>
