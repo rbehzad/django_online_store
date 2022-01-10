@@ -22,7 +22,6 @@ def LoginView(request):
         return redirect('shop_home')
     else:
         if request.method == 'POST':
-            print('testtttttttttttttttt')
             username = request.POST['email']
             password = request.POST['password']
             # if user authenticated below function return user object
