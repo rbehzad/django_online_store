@@ -23,5 +23,8 @@ urlpatterns = [
     path('shop/', include('shop_managing.urls')),
     path('blog/', include('blog.urls')),
     path('accounts/', include('accounts.urls')),
-    path('api/', include('accounts.api.urls')),
+    path('api/v1/', include('accounts.api.urls')),
+    path('api/v1/', include('shopping.api.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# v1 = version 1

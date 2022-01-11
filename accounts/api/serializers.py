@@ -39,13 +39,16 @@ class RegisterSerializer(serializers.ModelSerializer):
             first_name=validated_data['first_name'],
             last_name=validated_data['last_name'],
         )
-
         return user
 
 
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
-        models = User
-        fields = '__all__'
+        model = User
+        fields = ('email', 'first_name', 'last_name', 'phone_number', 'seller',)
 
+class UpdateProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('email', 'first_name', 'last_name')
 
