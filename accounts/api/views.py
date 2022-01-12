@@ -30,15 +30,17 @@ class RegisterView(generics.CreateAPIView):
 class RetrieveUpdateUser(generics.RetrieveUpdateAPIView):
     serializer_class = ProfileSerializer
     queryset = User.objects.all()
-    # authentication_classes = (TokenAuthentication,)
-#     # permission_classes = [IsAuthenticated,]
-    def get(self, request, pk):
-        user = User.objects.get(pk=pk)
-        srz_data = ProfileSerializer(instance=user, data=request.data)
-        if srz_data.is_valid():
-            return Response(srz_data.data, status=status.HTTP_200_OK)
-        else:
-            return Response(srz_data.errors, status=status.HTTP_404_NOT_FOUND)
+    # authentication_classes = (TokenObtainPairView,)
+    # permission_classes = [IsAuthenticated,]
+    def get(self, request):
+        print(request.user)
+        # user = User.objects.get(pk=pk)
+        # srz_data = ProfileSerializer(instance=user, data=request.data)
+        # if srz_data.is_valid():
+        #     return Response(srz_data.data, status=status.HTTP_200_OK)
+        # else:
+        #     return Response(srz_data.errors, status=status.HTTP_404_NOT_FOUND)
+        return Response('', status=status.HTTP_404_NOT_FOUND)
 
     def put(self, request, pk):
         user = User.objects.get(pk=pk)

@@ -23,6 +23,11 @@ class ShopView(generics.ListAPIView):
     serializer_class = ShopSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['shop_type']
+    
+    # def get(self):
+    #     shops = Shop.objects.get(status='Confirmed')
+    #     srz_data = ProductSerializer(instance=shops, many=True).data
+    #     return Response(srz_data, status=status.HTTP_200_OK)
 
 
 class ProductView(generics.ListAPIView):
@@ -31,11 +36,11 @@ class ProductView(generics.ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['tag']
+    filterset_fields = ['tag', 'amount']
 
     def get(self, request, pk):
         shop = Shop.objects.get(id=pk)
-        products = Product.objects.filter(shop=shop)
+        products = Product.objects.filter(shop=shop).exclude(amount=0)
         srz_data = ProductSerializer(instance=products, many=True).data
         return Response(srz_data, status=status.HTTP_200_OK)
 
