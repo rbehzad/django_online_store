@@ -76,6 +76,12 @@ class Product(models.Model):
     def __str__(self):
         return f"Product:{self.title}"
 
+    def available(self):
+        if self.amount == 0:
+            return 'unavailable'
+        else:
+            return 'available'
+
 
 # class Image(models.Model):
 #     name = models.CharField(max_length=255)

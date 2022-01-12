@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'rest_framework',
     'rest_framework_simplejwt',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -72,7 +73,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'shop_managing.views.shop_base',
+                # 'shop_managing.views.shop_base',
             ],
         },
     },
@@ -107,6 +108,14 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+# REST_FRAMEWORK = {
+#     'DEFAULT_PERMISSION_CLASSES': [
+#     'rest_framework.permissions.AllowAny'
+#     ],
+#     'DEFAULT_AUTHENTICATION_CLASSES': [
+#     'rest_framework_simplejwt.authentication.JWTAuthentication',
+#     ]
+# }
 
 
 # Internationalization
