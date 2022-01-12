@@ -32,3 +32,13 @@ class ProductView(generics.ListAPIView):
     serializer_class = ProductSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['tag']
+
+    def get(self, request, pk):
+        shop = Shop.objects.get(id=pk)
+        products = Product.objects.filter(shop=shop)
+        srz_data = ProductSerializer(instance=products, many=True).data
+        return Response(srz_data, status=status.HTTP_200_OK)
+
+
+
+

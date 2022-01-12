@@ -1,11 +1,11 @@
 from django.urls import path
-from django.urls.conf import include
 from .views import *
-# from .routers import router
+
 
 urlpatterns = [
     path('shoptype/', ShopTypeView.as_view()),
     path('shop/', ShopView.as_view()),
-    # path('', include(router.urls)),
+    path('shop/<int:pk>/products/', ProductView.as_view()),
+    # path('shop/<id:shop_id>/products/<id:product_id>', ProductView.as_view()),
 ]
 

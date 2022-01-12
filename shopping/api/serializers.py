@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from shop_managing.models import ShopType, Shop
+from shop_managing.models import Product, ShopType, Shop
 from accounts.models import User
 from rest_framework.validators import UniqueValidator
 
@@ -23,6 +23,6 @@ class ShopSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     shop = ShopTypeSerializer()
     class Meta:
-        model = Shop
+        model = Product
         fields = ('slug', 'title', 'description', 'price', 'shop', 'tag', 'amount')
 

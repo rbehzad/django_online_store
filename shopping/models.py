@@ -49,6 +49,7 @@ class CartItem(models.Model):
     def get_cost(self):
         return self.amount * self.product.price
 
+
 def slug_generator(sender, instance, *args, **kwargs):
     if not instance.slug:
         instance.slug = unique_slug_generator(instance)
