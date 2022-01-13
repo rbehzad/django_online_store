@@ -64,20 +64,25 @@ class ProductView(generics.ListAPIView):
 
 class CartView(APIView):# create cart with add a product
     def post(self, request, shop_pk, product_pk, product_amount):
-        # if Cart.objects.filter(status='Pending').first():
-        #     return Response(f'You can not create new cart because your last cart has pending status.', status=status.HTTP_403_FORBIDDEN)
-        try:
-            shop = Shop.objects.get(id=shop_pk)
-            cart = Cart.objects.create(title='cart', user=request.user, shop=shop)
-            product = Product.objects.get(id=product_pk)
-            CartItem.objects.create(cart=cart, product=product, amount=product_amount)
-        except:
-            return Response(f'Try Again', status=status.HTTP_400_BAD_REQUEST)
-        finally:
-            return Response(f'Cart was created with {cart.id} id', status=status.HTTP_201_CREATED)
+        shop = Shop.objects.get(id=shop_pk)
+        cart = Cart.objects.create(title='cart', user=request.user, shop=shop)
+        product = Product.objects.get(id=product_pk)
+        if product_amount > product.amount:
+            return Response(f"You can only add {product.amount} units of the product to your cart as we don't have more in stock. Please re-adjust the quantity.", status=status.HTTP_403_FORBIDDEN)
+        CartItem.objects.create(cart=cart, product=product, amount=product_amount)
+
+        return Response(f'Cart was created with {cart.id} id', status=status.HTTP_201_CREATED)
 
 
 class AddProductToCartView(APIView):
-    def post():
-        pass
+    def post(self, request, product_pk, product_amount, cart_pk):
+        cart = Cart.objects.get(id=cart_pk)
+        if cart.user != request.user:
+            return Response(f'Invalid Cart', status=status.HTTP_404_NOT_FOUND)
+        product = Product.objects.get(id=product_pk)
+        if int(product_amount) > int(product.amount):
+            return Response("Not enough amount of the product in stock. Please re-adjust the quantity.", status=status.HTTP_403_FORBIDDEN)
+        CartItem.objects.create(cart=cart, product=product, amount=product_amount)
+
+        return Response(f'Product with {product_pk} id added to cart with {cart_pk} id', status=status.HTTP_201_CREATED)
 
