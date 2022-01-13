@@ -8,6 +8,7 @@ from rest_framework import generics, status
 from rest_framework.authentication import TokenAuthentication
 from django_filters import rest_framework as filters
 from shopping.models import *
+from shopping.api import object_exist
 
 class ShopTypeView(generics.ListAPIView):
     # authentication_classes = (TokenAuthentication,)
@@ -23,11 +24,9 @@ class ShopView(generics.ListAPIView):
     serializer_class = ShopSerializer
     filter_backends = [filters.DjangoFilterBackend]
     filterset_fields = ['shop_type']
-    
-    def get(self):
-        shops = Shop.objects.get(status='Confirmed')
-        srz_data = ProductSerializer(instance=shops, many=True).data
-        return Response(srz_data, status=status.HTTP_200_OK)
+
+    def get_queryset(self):
+        return super().get_queryset().filter(status='Confirmed')
 
 
 class ProductFilter(filters.FilterSet):
@@ -63,26 +62,51 @@ class ProductView(generics.ListAPIView):
 
 
 class CartView(APIView):# create cart with add a product
-    def post(self, request, shop_pk, product_pk, product_amount):
+    def post(self, request, shop_pk, product_pk, amount):
         shop = Shop.objects.get(id=shop_pk)
         cart = Cart.objects.create(title='cart', user=request.user, shop=shop)
         product = Product.objects.get(id=product_pk)
-        if product_amount > product.amount:
+        if int(amount) > int(product.amount):
             return Response(f"You can only add {product.amount} units of the product to your cart as we don't have more in stock. Please re-adjust the quantity.", status=status.HTTP_403_FORBIDDEN)
-        CartItem.objects.create(cart=cart, product=product, amount=product_amount)
+        CartItem.objects.create(cart=cart, product=product, amount=amount)
+        product.amount -= amount
+        product.save()
 
         return Response(f'Cart was created with {cart.id} id', status=status.HTTP_201_CREATED)
 
 
-class AddProductToCartView(APIView):
-    def post(self, request, product_pk, product_amount, cart_pk):
+class AddDeleteProductInCartView(APIView):
+    def post(self, request, product_pk, amount, cart_pk):
+        cart = Cart.objects.filter(id=cart_pk).first()
+        # if not cart:
+        #     return Response(f'Cart Not Found', status=status.HTTP_404_NOT_FOUND)
+        object_exist.cart_exist(cart_pk)
+        object_exist.valid_user(cart.user, request.user)
+        # if cart.user != request.user:
+        #     return Response(f'You do not have access to this cart!', status=status.HTTP_403_FORBIDDEN)
+        product = Product.objects.get(id=product_pk)
+        object_exist.enough_amount(amount, product.amount)
+        # if not object_exist.enough_amount(amount, product.amount):
+            # return Response("Not enough amount of the product in stock. Please re-adjust the quantity.", status=status.HTTP_403_FORBIDDEN)
+        CartItem.objects.create(cart=cart, product=product, amount=amount)
+        product.amount -= amount
+        product.save()
+        return Response(f'Product with {product_pk} id added to cart with {cart_pk} id', status=status.HTTP_201_CREATED)
+
+    def delete(self, request, product_pk, product_amount, cart_pk):
         cart = Cart.objects.get(id=cart_pk)
         if cart.user != request.user:
-            return Response(f'Invalid Cart', status=status.HTTP_404_NOT_FOUND)
+            return Response(f'You do not have access to this cart!', status=status.HTTP_403_FORBIDDEN)
         product = Product.objects.get(id=product_pk)
-        if int(product_amount) > int(product.amount):
-            return Response("Not enough amount of the product in stock. Please re-adjust the quantity.", status=status.HTTP_403_FORBIDDEN)
-        CartItem.objects.create(cart=cart, product=product, amount=product_amount)
+        cart_item = CartItem.objects.filter(product=product, cart=cart)
+        if cart_item.first():
+            if cart_item.amount - product_amount <= 0:
+                cart_item.delete()
+                return Response(f'Product with {product_pk} id deleted from cart with {cart_pk} id', status=status.HTTP_200_OK)
+            else:
+                cart_item.amount -= product_amount
+                return Response(f'Reduce the {product_amount} units of product with id {product_pk} in cartitem with {cart_item.id} id.', status=status.HTTP_200_OK)
+        else:
+            return Response(f'There is no product with {product_pk} id in cart with {cart_pk} id', status=status.HTTP_404_NOT_FOUND)
 
-        return Response(f'Product with {product_pk} id added to cart with {cart_pk} id', status=status.HTTP_201_CREATED)
 

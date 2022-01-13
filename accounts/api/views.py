@@ -25,14 +25,16 @@ class RetrieveUpdateUser(generics.RetrieveUpdateAPIView):
     # authentication_classes = (TokenObtainPairView,)
     # permission_classes = [IsAuthenticated,]
     def get(self, request):
-        user = request.user
-        print(user)
+        user = self.request.user
+        print(user, '---------------------------------')
+        
         srz_data = ProfileSerializer(instance=user)
         return Response(srz_data.data, status=status.HTTP_200_OK)
 
-    def put(self, request, pk):
-        user = User.objects.get(pk=pk)
-        srz_data = UpdateProfileSerializer(instance=user, data=request.data, partial=True)
+    def put(self, reqeust):
+        user = self.request.user
+        
+        srz_data = UpdateProfileSerializer(instance=user, data=self.request.data)
         if srz_data.is_valid():
             srz_data.save()
             return Response(srz_data.data, status=status.HTTP_200_OK)

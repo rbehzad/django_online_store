@@ -11,18 +11,18 @@ class ProfileSerializer2(serializers.ModelSerializer):
 class ShopTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = ShopType
-        fields = ('slug', 'title',)
+        fields = ('id', 'title',)
 
 class ShopSerializer(serializers.ModelSerializer):
     shop_type = ShopTypeSerializer()
     user = ProfileSerializer2()
     class Meta:
         model = Shop
-        fields = ('slug', 'title', 'shop_type', 'user')
+        fields = ('id', 'title', 'shop_type', 'user')
 
 class ProductSerializer(serializers.ModelSerializer):
     shop = ShopTypeSerializer()
     class Meta:
         model = Product
-        fields = ('slug', 'title', 'description', 'price', 'shop', 'tag', 'amount')
+        fields = ('id', 'title', 'description', 'price', 'shop', 'tag', 'amount')
 
