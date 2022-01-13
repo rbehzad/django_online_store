@@ -64,6 +64,7 @@ class Product(models.Model):
     shop = models.ForeignKey(Shop, on_delete=CASCADE)
     amount = models.IntegerField()
     image = models.FileField()
+    available = models.BooleanField(default=True)
 
     class Meta:
         unique_together = ('title', 'slug')
@@ -78,9 +79,7 @@ class Product(models.Model):
 
     def available(self):
         if self.amount == 0:
-            return 'unavailable'
-        else:
-            return 'available'
+            self.available = False
 
 
 # class Image(models.Model):

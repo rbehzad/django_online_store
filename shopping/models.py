@@ -20,7 +20,7 @@ class Cart(models.Model):
     status = models.CharField(
         max_length=12,
         choices=STATUS_CHOICES,
-        default='pending',
+        default='Pending',
     )
     
     total_cost = models.IntegerField(default=0)

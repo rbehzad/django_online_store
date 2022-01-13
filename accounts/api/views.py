@@ -6,8 +6,6 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from ..models import User
 from .serializers import *
 from rest_framework import generics, status
-from rest_framework.viewsets import ModelViewSet, ViewSet
-from rest_framework.authentication import TokenAuthentication
 
 
 class MyObtainTokenPairView(TokenObtainPairView):
@@ -20,12 +18,6 @@ class RegisterView(generics.CreateAPIView):
     permission_classes = (AllowAny,)
     serializer_class = RegisterSerializer
 
-# class ProfileView(ModelViewSet):
-#     authentication_classes = (TokenAuthentication,)
-#     # permission_classes = [IsAuthenticated,]
-#     queryset = User.objects.all()
-#     serializer_class = ProfileSerializer
-
 
 class RetrieveUpdateUser(generics.RetrieveUpdateAPIView):
     serializer_class = ProfileSerializer
@@ -33,14 +25,10 @@ class RetrieveUpdateUser(generics.RetrieveUpdateAPIView):
     # authentication_classes = (TokenObtainPairView,)
     # permission_classes = [IsAuthenticated,]
     def get(self, request):
-        print(request.user)
-        # user = User.objects.get(pk=pk)
-        # srz_data = ProfileSerializer(instance=user, data=request.data)
-        # if srz_data.is_valid():
-        #     return Response(srz_data.data, status=status.HTTP_200_OK)
-        # else:
-        #     return Response(srz_data.errors, status=status.HTTP_404_NOT_FOUND)
-        return Response('', status=status.HTTP_404_NOT_FOUND)
+        user = request.user
+        print(user)
+        srz_data = ProfileSerializer(instance=user)
+        return Response(srz_data.data, status=status.HTTP_200_OK)
 
     def put(self, request, pk):
         user = User.objects.get(pk=pk)
