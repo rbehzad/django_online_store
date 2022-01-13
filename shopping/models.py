@@ -31,7 +31,7 @@ class Cart(models.Model):
         unique_together = ('title', 'slug')
 
     def __str__(self):
-        return f"Cart:{self.title}"
+        return f"Cart:id:{self.id}"
 
     def get_total_price(self):
         return sum(item.get_cost() for item in self.cart_item.all())
@@ -44,7 +44,7 @@ class CartItem(models.Model):
     total_cost = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.product.title
+        return f"cartitem:{self.id}"
 
     def get_cost(self):
         return self.amount * self.product.price

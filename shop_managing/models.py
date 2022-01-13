@@ -16,7 +16,7 @@ class Tag(models.Model):
         unique_together = ('title', 'slug')
 
     def __str__(self):
-        return f"Tag:{self.title}"
+        return f"Tag:{self.id}"
 
 class ShopType(models.Model):
     slug = models.SlugField(unique=True, max_length=120, null=True, blank=True)
@@ -26,7 +26,7 @@ class ShopType(models.Model):
         unique_together = ('title', 'slug')
 
     def __str__(self):
-        return self.title
+        return f"ShopType:{self.id}"
 
 
 class Shop(models.Model):
@@ -52,7 +52,7 @@ class Shop(models.Model):
         unique_together = ('title', 'slug')
 
     def __str__(self):
-        return f"Shop:{self.title}"
+        return f"Shop:{self.id}"
 
 
 class Product(models.Model):
@@ -75,7 +75,7 @@ class Product(models.Model):
     admin_image.allow_tags = True
 
     def __str__(self):
-        return f"Product:{self.title}"
+        return f"Product:{self.id}"
 
     def available(self):
         if self.amount == 0:

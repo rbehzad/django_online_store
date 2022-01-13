@@ -3,6 +3,8 @@ from shop_managing.models import Product, ShopType, Shop
 from accounts.models import User
 from rest_framework.validators import UniqueValidator
 
+from shopping.models import Cart, CartItem
+
 class ProfileSerializer2(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -26,3 +28,15 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = ('id', 'title', 'description', 'price', 'shop', 'tag', 'amount')
 
+class ShopSerializer2():
+    shop_type = ShopTypeSerializer()
+    class Meta:
+        model = Shop
+        fields = ('title', 'shop_type')
+
+class CartSerializer(serializers.ModelSerializer):
+    shop = ShopSerializer2()
+    user = ProfileSerializer2()
+    class Meta:
+        model = Cart
+        fields = ('id', 'shop', 'user', 'status', 'created_at')
