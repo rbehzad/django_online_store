@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('shop_managing', '0003_alter_shop_status'),
+        ('shopping', '0001_initial'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='shop',
+            model_name='cart',
             name='status',
-            field=models.CharField(choices=[('Deleted', 'Deleted'), ('Pending', 'Pending'), ('Confirmed', 'Confirmed')], default='Pending', max_length=12),
+            field=models.CharField(choices=[('Paid', 'Paid'), ('Canceled', 'Canceled'), ('Confirmed', 'Confirmed'), ('Pending', 'Pending')], default='Pending', max_length=12),
         ),
     ]

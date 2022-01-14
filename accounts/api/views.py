@@ -26,7 +26,6 @@ class RetrieveUpdateUser(generics.RetrieveUpdateAPIView):
     # permission_classes = [IsAuthenticated,]
     def get(self, request):
         user = self.request.user
-        print(user, '---------------------------------')
         
         srz_data = ProfileSerializer(instance=user)
         return Response(srz_data.data, status=status.HTTP_200_OK)

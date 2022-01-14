@@ -1,4 +1,3 @@
-import re
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -9,7 +8,6 @@ from rest_framework import generics, status
 from rest_framework.authentication import TokenAuthentication
 from django_filters import rest_framework as filters
 from shopping.models import *
-from shopping.api import object_exist
 
 
 class ShopTypeView(generics.ListAPIView):
@@ -75,31 +73,7 @@ class CartView(APIView):# create cart with add a product
         CartItem.objects.create(cart=cart, product=product, amount=1)
         product.amount -= 1
         product.save()
-        return Response(f'Cart was created with {cart.id} id', status=status.HTTP_201_CREATED)
-
-
-# class CartView(generics.CreateAPIView):
-#     queryset = Cart.objects.all()
-#     serializer_class = CartItemSerializer
-#     def post(self, request):
-#         data = request.data # include poduct id and amount
-#         product = Product.objects.get(id=data['id'])
-#         if(data['amount'] > product.amount):
-#             return Response("Not enough amount of the product in stock. Please re-adjust the quantity.", status=status.HTTP_400_BAD_REQUEST)
-
-#         data['user'] = self.request.user
-#         data['shop'] = product.shop
-#         cart = CartSerializer(data=request.data)
-#         if cart.is_valid():
-#             cart.save()
-#             CartItem.objects.create(cart=cart, product=product, amount=data['amount'])
-#             product.amount -= int(data['amount'])
-#             product.save()
-#             return Response(cart.data['id'], status=status.HTTP_201_CREATED)
-#         return Response(cart.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-
+        return Response(f'Cart created with {cart.id} id', status=status.HTTP_201_CREATED)
 
 
 class AddDeleteProductInCartView(APIView):
@@ -121,11 +95,12 @@ class AddDeleteProductInCartView(APIView):
         cart_item = CartItem.objects.filter(cart=cart, product=product).first()
         if cart_item:
             cart_item.amount += 1
+            cart_item.save()
         else:
-            CartItem.objects.create(cart=cart, product=product, amount=1)
+            cart_item = CartItem.objects.create(cart=cart, product=product, amount=1)
         product.amount -= 1
         product.save()
-        return Response(f'Product with {product_pk} id added to cart with {cart_pk} id', status=status.HTTP_201_CREATED)
+        return Response(f'Product with {product_pk} id added to cart with {cart_pk} id. now there are {cart_item.amount} units of this product in the cart', status=status.HTTP_201_CREATED)
 
     def delete(self, request, cart_pk, product_pk):
         cart = Cart.objects.filter(id=cart_pk).first()
@@ -141,23 +116,24 @@ class AddDeleteProductInCartView(APIView):
             return Response(f'There is no product with {product_pk} id in cart with {cart_pk} id', status=status.HTTP_404_NOT_FOUND)
         else:
             if cart_item.amount - 1 <= 0:
+                cart_item_id = cart_item.id
                 cart_item.delete()
                 product.amount += 1
                 product.save()
-                return Response(f'Product with {product_pk} id deleted from cart with {cart_pk} id', status=status.HTTP_200_OK)
+                return Response(f'Product with {product_pk} id deleted from cart with {cart_pk} id. cartitem with {cart_item_id} id deleted.', status=status.HTTP_200_OK)
             else:
                 cart_item.amount -= 1
                 cart_item.save()
                 product.amount += 1
                 product.save()
-                return Response(f'Reduce the 1 units of product with id {product_pk} in cartitem with {cart_item.id} id.', status=status.HTTP_200_OK)
+                return Response(f'Reduce the 1 units of product with id {product_pk} in cartitem with {cart_item.id} id. now there are {cart_item.amount} units of this product in the cart', status=status.HTTP_200_OK)
 
 
 class PayCartView(APIView):
     def post(self, request, cart_pk):
         cart = Cart.objects.filter(id=cart_pk).first()
-        if not cart or cart.status != 'Pending':
-            return Response(f'Cart with {cart_pk} id Not Found or cart status is not pending', status=status.HTTP_404_NOT_FOUND)
+        if not cart or cart.status != 'Confirmed':
+            return Response(f'Cart with {cart_pk} id Not Found or cart status is not confirmed', status=status.HTTP_404_NOT_FOUND)
         if cart.user != request.user:
             return Response(f'You do not have access to this cart!', status=status.HTTP_403_FORBIDDEN)
         cart.status = 'Paid'
