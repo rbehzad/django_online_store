@@ -21,11 +21,11 @@ class RegisterView(generics.CreateAPIView):
 
 
 class RetrieveUpdateUser(generics.RetrieveUpdateAPIView):
-    authentication_classes = []
+    # permission_classes = ()
     serializer_class = ProfileSerializer
     queryset = User.objects.all()
     # authentication_classes = (TokenObtainPairView,)
-    # permission_classes = [IsAuthenticated,]
+    permission_classes = [IsAuthenticated,]
     def get(self, request):
         user = self.request.user
         

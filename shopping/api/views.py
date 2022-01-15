@@ -1,3 +1,4 @@
+from urllib import request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -11,15 +12,13 @@ from shopping.models import *
 
 
 class ShopTypeView(generics.ListAPIView):
-    # authentication_classes = (TokenAuthentication,)
-    # permission_classes = [IsAuthenticated,]
+    permission_classes = [IsAuthenticated,]
     queryset = ShopType.objects.all()
     serializer_class = ShopTypeSerializer
 
 
 class ShopView(generics.ListAPIView):
-    # authentication_classes = (TokenAuthentication,)
-    # permission_classes = [IsAuthenticated,]
+    permission_classes = [IsAuthenticated,]
     queryset = Shop.objects.all()
     serializer_class = ShopSerializer
     filter_backends = [DjangoFilterBackend]
@@ -30,11 +29,8 @@ class ShopView(generics.ListAPIView):
 
 
 class ProductView(generics.ListAPIView):
-    # authentication_classes = (TokenAuthentication,)
-    # permission_classes = [IsAuthenticated,]
-    # model = Product
+    permission_classes = [IsAuthenticated,]
     queryset = Product.objects.all()
-    # model = queryset.model
     serializer_class = ProductSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['tag', 'amount']
@@ -132,6 +128,7 @@ class AddDeleteProductInCartView(APIView):
 
 
 class PayCartView(APIView):
+    
     def post(self, request, cart_pk):
         cart = Cart.objects.filter(id=cart_pk).first()
         if not cart or cart.status != 'Confirmed':
@@ -144,8 +141,7 @@ class PayCartView(APIView):
 
 
 class PendingCartView(generics.ListAPIView):
-    # authentication_classes = (TokenAuthentication,)
-    # permission_classes = [IsAuthenticated,]
+    permission_classes = [IsAuthenticated,]
     queryset = Cart.objects.all()
     serializer_class = CartSerializer
 
@@ -153,8 +149,7 @@ class PendingCartView(generics.ListAPIView):
         return super().get_queryset().filter(status='Pending')
 
 class PaidCartView(generics.ListAPIView):
-    # authentication_classes = (TokenAuthentication,)
-    # permission_classes = [IsAuthenticated,]
+    permission_classes = [IsAuthenticated,]
     queryset = Cart.objects.all()
     serializer_class = CartSerializer
 

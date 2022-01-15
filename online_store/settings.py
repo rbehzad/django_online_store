@@ -130,7 +130,6 @@ REST_FRAMEWORK = {
 }
 
 SWAGGER_SETTINGS = {
-    'SHOW_REQUEST_HEADERS': True,
     'SECURITY_DEFINITIONS': {
     'Bearer': {
         'type': 'apiKey',
@@ -138,15 +137,6 @@ SWAGGER_SETTINGS = {
         'in': 'header'
         }
     },
-    'USE_SESSION_AUTH': False,
-    'JSON_EDITOR': True,
-    'SUPPORTED_SUBMIT_METHODS': [
-        'get',
-        'post',
-        'put',
-        'delete',
-        'patch'
-    ],
 }
 
 # Internationalization
