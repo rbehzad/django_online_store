@@ -1,5 +1,4 @@
 from django.db import models
-from django.db.models.base import Model
 from django.db.models.deletion import CASCADE
 from accounts.models import User
 from shop_managing.models import *
@@ -8,7 +7,7 @@ from django.db.models.signals import pre_save
 
 
 class Cart(models.Model):
-    user = models.ForeignKey(User, on_delete=CASCADE)
+    user = models.ForeignKey(User, on_delete=CASCADE, related_name='carts')
     title = models.CharField(max_length=120)
     slug = models.SlugField(unique=True, max_length=120, null=True, blank=True)
     STATUS_CHOICES = {
@@ -26,6 +25,7 @@ class Cart(models.Model):
     total_cost = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     shop = models.ForeignKey(Shop, on_delete=SET_NULL, null=True)
+    
 
     class Meta:
         unique_together = ('title', 'slug')
@@ -35,6 +35,9 @@ class Cart(models.Model):
 
     def get_total_price(self):
         return sum(item.get_cost() for item in self.cart_item.all())
+
+    def get_products_number(self):
+        return sum(item.amount for item in self.cart_item.all())
 
 
 class CartItem(models.Model):

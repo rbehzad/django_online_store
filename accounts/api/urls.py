@@ -10,5 +10,6 @@ urlpatterns = [
     path('register/', RegisterView.as_view(), name='auth_register'),
     # path('user/<int:pk>/', RetrieveUpdateUser.as_view()),
     path('user/', RetrieveUpdateUser.as_view()),
+    # path('user/image/upload/', UserImageView.as_view()),
 ]
 

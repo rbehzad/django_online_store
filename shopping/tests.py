@@ -29,6 +29,11 @@ class Test(APITestCase):
         self.product1 = mommy.make(Product, shop=self.shop1,
                    title='cart', description='dscrp', price=22, amount=3)
         # self.product1.tag.add(self.tag1)
+        mommy.make(Cart, user=self.user,
+                   shop=self.shop1, title='cart', status='Paid')
+        mommy.make(Cart, user=self.user,
+                   shop=self.shop1, title='cart', status='Pending')
+
 
     def test_shoptype_list(self):
         self.client.force_authenticate(self.user)
@@ -46,10 +51,23 @@ class Test(APITestCase):
         self.client.force_authenticate(self.user)
         url = reverse('shopping_shop_product', args=['1'])
         resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 404)
+
+    def test_cart(self):
+        self.client.force_authenticate(self.user)
+        url = reverse('shopping_create_cart', args=[1])
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 405)
+
+
+    def test_paid(self):
+        self.client.force_authenticate(self.user)
+        url = reverse('shopping_paid')
+        resp = self.client.get(url)
         self.assertEqual(resp.status_code, 200)
 
-    # def test_cart(self):
-    #     self.client.force_authenticate(self.user)
-    #     url = reverse('shopping_create_cart', args=[1])
-    #     resp = self.client.get(url)
-    #     self.assertEqual(resp.status_code, 200)
+    def test_pending(self):
+        self.client.force_authenticate(self.user)
+        url = reverse('shopping_pending')
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 200)

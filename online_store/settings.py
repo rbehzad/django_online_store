@@ -119,10 +119,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-    'rest_framework.permissions.AllowAny',
+        'rest_framework.permissions.AllowAny',
     ],
+
     'DEFAULT_AUTHENTICATION_CLASSES': [
-    'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
     # 'DEFAULT_FILTER_BACKENDS': [
     #     'django_filters.rest_framework.DjangoFilterBackend']
@@ -132,19 +133,19 @@ SWAGGER_SETTINGS = {
     'SHOW_REQUEST_HEADERS': True,
     'SECURITY_DEFINITIONS': {
     'Bearer': {
-    'type': 'apiKey',
-    'name': 'Authorization',
-    'in': 'header'
-    }
+        'type': 'apiKey',
+        'name': 'Authorization',
+        'in': 'header'
+        }
     },
-    'USE_SESSION_AUTH': True,
+    'USE_SESSION_AUTH': False,
     'JSON_EDITOR': True,
     'SUPPORTED_SUBMIT_METHODS': [
-    'get',
-    'post',
-    'put',
-    'delete',
-    'patch'
+        'get',
+        'post',
+        'put',
+        'delete',
+        'patch'
     ],
 }
 

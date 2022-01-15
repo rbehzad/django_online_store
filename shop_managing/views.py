@@ -1,3 +1,4 @@
+from urllib import request
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
@@ -21,6 +22,7 @@ from django.views.generic import (
 )
 from django.db.models import Q
 from django.contrib import messages
+from django.db.models import Count
 
 #### view for image (file field):
 # def upload(request):
@@ -39,8 +41,32 @@ class MyShopList(LoginRequiredMixin, ListView):
     template_name = 'shop_managing/shop_dashboard.html'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        # find number of paid carts
+        customers = User.objects.annotate(num_carts=Count('carts'))
+        customers2 = []
+        for customer in customers:
+            paid_carts = list(Cart.objects.filter(user=customer, status='Paid'))
+            customer.num_carts = len(paid_carts)
+            if customer != self.request.user and customer.num_carts != 0:
+                customers2.append(customer)
+        # find number of products
+        for customer in customers2:
+            carts = Cart.objects.filter(user=customer, status='Paid')
+            if carts.exists():
+                customer.last_cart_date = carts.last().created_at # find last cart date
+            sum = 0
+            total_paid = 0
+            for cart in carts:
+                sum = cart.get_products_number()
+                total_paid = cart.get_total_price()
+            customer.num_products = sum
+            customer.total_paid = total_paid
+        # find total paid of customer
+
+
         context = {
-            'shops': Shop.objects.filter(user=self.request.user).exclude(status='Deleted')
+            'shops': Shop.objects.filter(user=self.request.user).exclude(status='Deleted'),
+            'customers': customers2,
         }
         return context
 
@@ -195,19 +221,3 @@ def shop_base(request):
         'tags': Tag.objects.all()
     }
     return context
-
-
-# class DeleteCart(View):
-#     model = Cart
-#     def post(self, request, *args, **kwargs):
-#         shop = Shop.objects.get(slug=self.kwargs['slug'])
-#         shop.status = 'Deleted'
-#         shop.save()
-#         return render(request, "shop_managing/shop_dashboard.html", {})
-
-#     def get(self, request, *args, **kwargs):
-#         shop = Shop.objects.get(slug=self.kwargs['slug'])
-#         return render(request, "shop_managing/delete_confirm.html", {'page': 'shop'})
-
-
-

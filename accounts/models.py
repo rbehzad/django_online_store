@@ -1,3 +1,4 @@
+from django.db.models.deletion import CASCADE
 from django.db import models
 from django.contrib.auth.models import (
     AbstractBaseUser, BaseUserManager, PermissionsMixin
@@ -122,6 +123,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def is_seller(self):
         return self.seller
+
+def nameFile(instance, filename):
+    return '/'.join(['images', str(instance.name), filename])
+
+class UserImage(models.Model):
+    user = models.OneToOneField(User, on_delete=CASCADE)
+    image = models.ImageField(upload_to=nameFile, blank=True, null=True)
 
 
 class GuestEmail(models.Model):

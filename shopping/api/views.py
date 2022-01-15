@@ -6,7 +6,7 @@ from shop_managing.models import *
 from .serializers import *
 from rest_framework import generics, status
 from rest_framework.authentication import TokenAuthentication
-from django_filters import rest_framework as filters
+from django_filters.rest_framework import DjangoFilterBackend
 from shopping.models import *
 
 
@@ -22,32 +22,22 @@ class ShopView(generics.ListAPIView):
     # permission_classes = [IsAuthenticated,]
     queryset = Shop.objects.all()
     serializer_class = ShopSerializer
-    filter_backends = [filters.DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend]
     filterset_fields = ['shop_type']
 
     def get_queryset(self):
         return super().get_queryset().filter(status='Confirmed')
 
 
-class ProductFilter(filters.FilterSet):
-    # name = filters.CharFilter(lookup_expr='iexact')
-    available = filters.BooleanFilter()
-    price = filters.NumberFilter()
-    price__gt = filters.NumberFilter(field_name='price', lookup_expr='gt')
-    price__lt = filters.NumberFilter(field_name='price', lookup_expr='lt')
-    min_price = filters.NumberFilter(field_name="price", lookup_expr='gte')
-    max_price = filters.NumberFilter(field_name="price", lookup_expr='lte')
-    class Meta:
-        model = Product
-        fields = ('available', 'price')
-
 class ProductView(generics.ListAPIView):
     # authentication_classes = (TokenAuthentication,)
     # permission_classes = [IsAuthenticated,]
+    # model = Product
     queryset = Product.objects.all()
+    # model = queryset.model
     serializer_class = ProductSerializer
-    filter_backends = (filters.DjangoFilterBackend,)
-    filterset_class = ProductFilter
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['tag', 'amount']
 
     def get(self, request, pk):
         shop = Shop.objects.filter(id=pk).first()
@@ -57,8 +47,16 @@ class ProductView(generics.ListAPIView):
         srz_data = ProductSerializer(instance=products, many=True).data
         return Response(srz_data, status=status.HTTP_200_OK)
 
-    # def get_queryset(self, *args, **kwargs):
-    #     return self.queryset.filter(tag=self.kwargs.get('tag'))
+    # def get_queryset(self):
+    #     pk = self.kwargs['pk']
+    #     shop = Shop.objects.filter(id=pk).first()
+    #     if not shop:
+    #         return Response(f'Not Found Shop Object With {pk} id', status=status.HTTP_404_NOT_FOUND)
+    #     products = Product.objects.filter(shop=shop).exclude(amount=0)
+    #     srz_data = ProductSerializer(instance=products, many=True).data
+    #     return Response(srz_data, status=status.HTTP_200_OK)
+        # return super().get_queryset()
+
 
 
 class CartView(APIView):# create cart with add a product
@@ -120,6 +118,10 @@ class AddDeleteProductInCartView(APIView):
                 cart_item.delete()
                 product.amount += 1
                 product.save()
+                if not CartItem.objects.filter(cart=cart).first():
+                    cart_id = cart.id
+                    cart.delete()
+                    return Response(f'cart with {cart_id} id deleted', status=status.HTTP_200_OK)
                 return Response(f'Product with {product_pk} id deleted from cart with {cart_pk} id. cartitem with {cart_item_id} id deleted.', status=status.HTTP_200_OK)
             else:
                 cart_item.amount -= 1

@@ -80,6 +80,43 @@ Dashboard
 </div>
 </div><!-- End Shop List -->
 
+
+<!-- Customer List -->
+<div class="col-12">
+  <div class="card top-selling">
+  
+      <div class="card-body pb-0">
+      <h5 class="card-title">Customers</h5>
+  
+      <table class="table table-borderless">
+          <thead>
+          <tr>
+              <th scope="col">Customer Email</th>
+              <th scope="col">Last Purchase Date</th>
+              <th scope="col">Number of Paid Carts</th>
+              <th scope="col">Total Paid</th>
+              <th scope="col">Number of products</th>
+          </tr>
+          </thead>
+          <tbody>
+          {% for customer in customers %}
+          
+          <tr>
+              <th scope="row">{{ customer.email }}</th>
+              <th>{{ customer.last_cart_date }}</th>
+              <td>{{ customer.num_carts }}</td>
+              <td>$ {{ customer.total_paid }}</td>
+              <td>{{ customer.num_products }}</td>
+          </tr>
+  
+          {% endfor %}
+          </tbody>
+      </table>
+  
+      </div>
+  
+  </div>
+  </div><!-- End Customer List -->
 {% endblock middlepage %}
 
 
