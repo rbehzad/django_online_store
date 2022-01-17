@@ -6,7 +6,7 @@ Products List
 {% endblock page_title %}
 
 {% block middlepage %}
-
+<script src="https://cdn.zingchart.com/zingchart.min.js"></script>
 <!-- My Cart List -->
 <!-- Reports -->
 <div class="col-12">
@@ -18,12 +18,36 @@ Products List
 
       <div class="card-body">
         <h5 class="card-title">{{shop.title}} Reports</h5>
-
         <!-- Line Chart -->
-        <div id="reportsChart">
+        <div id="myChart">
 
-           <!--                  nemoodar                  -->
+        <script>   
+          var chartData = {       
+            "type":"bar",
+            "scale-x":{
+              "values": [
+                'Dennis',
+                'Erik',
+                'Tim'
+              ]
+            },
+            'series': [
+              {
+                'values': [
+                    25,
+                    23,
+                    27,
+                  ]
+              }
+            ]
+          }
+        
+          zingchart.render({
+            id: "myChart",
+            data: chartData,
+          });
 
+        </script>
 
         </div>
         <!-- End Line Chart -->

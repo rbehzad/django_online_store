@@ -100,12 +100,12 @@ Dashboard
           </thead>
           <tbody>
           {% for customer in customers %}
-          
-          <tr>
+
+          <tr>              
               <th scope="row">{{ customer.email }}</th>
               <th>{{ customer.last_cart_date }}</th>
               <td>{{ customer.num_carts }}</td>
-              <td>$ {{ customer.total_paid }}</td>
+              <td>{{ customer.total_paid }}</td>
               <td>{{ customer.num_products }}</td>
           </tr>
   

@@ -1,4 +1,3 @@
-from http.client import HTTPResponse
 from rest_framework.response import Response
 from .serializers import MyTokenObtainPairSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated

@@ -1,28 +1,26 @@
-from urllib import request
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.views.generic import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse_lazy
 from .forms import *
 from .models import *
 from shopping.models import *
 from blog.models import Post
-from django.views.generic.base import TemplateView
 from django.views.generic import (
     ListView,
-    TemplateView,
-    DetailView,
     CreateView,
     UpdateView,
-    DeleteView,
     View,
 )
 from django.db.models import Q
 from django.contrib import messages
-from django.db.models import Count
+from django.db.models import Count, Sum, Max
+from rest_framework.views import APIView
+from rest_framework.response import Response
+
 
 #### view for image (file field):
 # def upload(request):
@@ -39,6 +37,18 @@ class MyShopList(LoginRequiredMixin, ListView):
     model = Shop
     context_object_name = 'shops'
     template_name = 'shop_managing/shop_dashboard.html'
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)        
+    #     for cart in Cart.objects.all():
+    #         cart.total_cost = cart.get_total_price()
+    #         cart.save()
+    #         # print(cart.total_cost)
+    #     carts = Cart.objects.filter(shop__user=self.request.user, status='Paid').values('user__email').annotate(num_amounts=Sum('cart_item__amount'), num_carts=Count('id'), last_cart_date=Max('created_at'), total_paid=Sum('total_cost'))
+    #     context = {
+    #         'shops': Shop.objects.filter(user=self.request.user).exclude(status='Deleted'),
+    #         'carts': carts,
+    #     }
+    #     return context
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # find number of paid carts
@@ -62,7 +72,6 @@ class MyShopList(LoginRequiredMixin, ListView):
             customer.num_products = sum
             customer.total_paid = total_paid
         # find total paid of customer
-
 
         context = {
             'shops': Shop.objects.filter(user=self.request.user).exclude(status='Deleted'),
@@ -142,7 +151,8 @@ class CartList(LoginRequiredMixin, View):
         context = {
             'carts': Cart.objects.filter(shop__slug=self.kwargs['slug']).order_by('created_at'),
             'shop': Shop.objects.get(slug=self.kwargs['slug']),
-            'status': ['Pending', 'Confirmed', 'Deleted', 'Paid']
+            'status': ['Pending', 'Confirmed', 'Deleted', 'Paid'],
+            
         }
         return render(request, 'shop_managing/cart_list.html', context)
 
@@ -206,6 +216,7 @@ class ProductList(LoginRequiredMixin, ListView):
     template_name = 'shop_managing/product_list.html'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
         context = {
             'products': Product.objects.filter(shop__slug=self.kwargs['slug']),
             'shop': Shop.objects.get(slug=self.kwargs['slug'])
@@ -221,3 +232,7 @@ def shop_base(request):
         'tags': Tag.objects.all()
     }
     return context
+
+
+# def resultsData(request, obj):
+    

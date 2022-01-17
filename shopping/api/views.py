@@ -1,12 +1,9 @@
-from urllib import request
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework.permissions import IsAuthenticated
 from shop_managing.models import *
 from .serializers import *
 from rest_framework import generics, status
-from rest_framework.authentication import TokenAuthentication
 from django_filters.rest_framework import DjangoFilterBackend
 from shopping.models import *
 
@@ -56,10 +53,10 @@ class ProductView(generics.ListAPIView):
 
 
 class CartView(APIView):# create cart with add a product
-    def post(self, request, product_pk):
-        product = Product.objects.filter(id=product_pk).first()
+    def post(self, request, pk):
+        product = Product.objects.filter(id=pk).first()
         if not product:
-            return Response(f"There is no product with {product_pk} id", status=status.HTTP_404_NOT_FOUND)
+            return Response(f"There is no product with {pk} id", status=status.HTTP_404_NOT_FOUND)
         shop = product.shop
         cart = Cart.objects.create(title='cart', user=request.user, shop=shop)
         if product.amount == 0:
@@ -128,7 +125,6 @@ class AddDeleteProductInCartView(APIView):
 
 
 class PayCartView(APIView):
-    
     def post(self, request, cart_pk):
         cart = Cart.objects.filter(id=cart_pk).first()
         if not cart or cart.status != 'Confirmed':
