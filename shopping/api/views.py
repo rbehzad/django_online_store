@@ -38,6 +38,8 @@ class ProductView(generics.ListAPIView):
         return super().get_queryset().filter(shop=shop)
 
 
+# this view has problem - serializer problem
+# TODO 
 class CreateCartView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated,]
     serializer_class = CartCreateSerializer
@@ -45,6 +47,8 @@ class CreateCartView(generics.CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         product = Product.objects.filter(id=kwargs['pk']).first()
+        if product.amount <= 0:
+           return Response(f"This product is not available.", status=status.HTTP_403_FORBIDDEN) 
         shop = product.shop
         cart = Cart.objects.create(title='cart', user=request.user, shop=shop)
         CartItem.objects.create(cart=cart, product=product, amount=1)

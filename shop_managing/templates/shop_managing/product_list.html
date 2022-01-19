@@ -16,40 +16,57 @@ Products List
         <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
       </div>
 
-      <div class="card-body">
+      <div class="card-body container">
         <h5 class="card-title">{{shop.title}} Reports</h5>
-        <!-- Line Chart -->
-        <div id="myChart">
+          <div class="row text-center">
+    
+              <!--box 1-->
+              <div class="col-md">
+                <small><span>Daily Report</span></small>
+                <div id="myChartDaily">
+                  <script>   
+                    var chartData = {       
+                      "type":"bar",
+                      "scale-x":{
+                        "values": [
+                          'NOSC',
+                          'NOSP',
+                        ]
+                      },
+                      'series': [
+                        {
+                          'values': [
+                              25,
+                              23,
+                            ]
+                        }
+                      ]
+                    }
+                    zingchart.render({
+                      id: "myChartDaily",
+                      data: chartData,
+                    });
+                  </script>
+                </div>
+                <small><span>NOSC = Number Of Sold Cart</span></small>
+                <small><span>NOSP = Number Of Sold Product</span></small>
+                
+              </div>
 
-        <script>   
-          var chartData = {       
-            "type":"bar",
-            "scale-x":{
-              "values": [
-                'Dennis',
-                'Erik',
-                'Tim'
-              ]
-            },
-            'series': [
-              {
-                'values': [
-                    25,
-                    23,
-                    27,
-                  ]
-              }
-            ]
-          }
+              <!--box 2-->
+              <div class="col-md">
+                <small><span>Weekly Report</span></small>
+              </div>
+
+              <!--box 3-->
+              <div class="col-md">
+                <small><span>Yearly Report</span></small>
+              </div>
+          </div>
         
-          zingchart.render({
-            id: "myChart",
-            data: chartData,
-          });
+        <!-- Line Chart -->
 
-        </script>
 
-        </div>
         <!-- End Line Chart -->
       </div>
     </div>
