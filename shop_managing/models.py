@@ -77,9 +77,13 @@ class Product(models.Model):
     def __str__(self):
         return f"Product:{self.id}"
 
-    def available(self):
+    def check_availablity(self):
         if self.amount == 0:
             self.available = False
+            self.save()
+        else:
+            self.available = True
+            self.save()
 
 
 # class Image(models.Model):

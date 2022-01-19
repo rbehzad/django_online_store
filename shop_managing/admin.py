@@ -68,7 +68,7 @@ class TagFilter(SimpleListFilter):
 #                 return queryset.filter(shop__shop_type__title=shoptype[0])
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('admin_image', 'title', 'shop', 'amount')
+    list_display = ('admin_image', 'title', 'shop', 'amount', 'available')
     # list_filter = ('shop', TagFilter, ShopTypeFilter)
     list_filter = ('shop', TagFilter)
     search_fields = ('title',)

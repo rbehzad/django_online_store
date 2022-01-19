@@ -6,13 +6,6 @@ from model_mommy import mommy
 from shop_managing.models import *
 from shopping.models import *
 
-# class RegisterTestCase(APITestCase):
-#     def test_register(self):
-#         data = {"username": "testcase@gmail.com", "password": "hellotest123",}
-#         response = self.client.post('/api/v1/register/', data)
-#         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
-
 class AuthenticationTestCase(APITestCase):
     def setUp(self):
         self.data = {
