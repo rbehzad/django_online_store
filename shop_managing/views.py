@@ -230,16 +230,3 @@ class ProductList(LoginRequiredMixin, ListView):
         }
         return context
 
-
-@login_required(login_url='shop_login')
-def shop_base(request):
-    context = {
-        'carts': Cart.objects.filter(shop__user=request.user, status='Paid'),
-        'posts': Post.objects.filter(author=request.user),
-        'tags': Tag.objects.all()
-    }
-    return context
-
-
-# def resultsData(request, obj):
-    

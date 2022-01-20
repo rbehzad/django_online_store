@@ -1,5 +1,6 @@
 import json
 from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from .serializers import MyTokenObtainPairSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -22,34 +23,24 @@ class RegisterView(generics.CreateAPIView):
 
 
 class RetrieveUpdateUser(generics.RetrieveUpdateAPIView):
-    # permission_classes = ()
-    serializer_class = ProfileSerializer
-    queryset = User.objects.all()
-    # authentication_classes = (TokenObtainPairView,)
+    serializer_class = UpdateProfileSerializer
+    # queryset = User.objects.all()
     permission_classes = [IsAuthenticated,]
-    def get(self, request):
-        user = self.request.user
+    def get_object(self):
+        return get_object_or_404(User, id=self.request.user.id)
+    # def get(self, request):
+    #     user = self.request.user
         
-        srz_data = ProfileSerializer(instance=user)
-        return Response(srz_data.data, status=status.HTTP_200_OK)
+    #     srz_data = ProfileSerializer(instance=user)
+    #     return Response(srz_data.data, status=status.HTTP_200_OK)
 
-    def put(self, reqeust):
-        user = self.request.user
+    # def put(self, reqeust):
+    #     user = self.request.user
         
-        srz_data = UpdateProfileSerializer(instance=user, data=self.request.data)
-        if srz_data.is_valid():
-            srz_data.save()
-            return Response(srz_data.data, status=status.HTTP_200_OK)
-        return Response(srz_data.errors, status=status.HTTP_400_BAD_REQUEST)
+    #     srz_data = UpdateProfileSerializer(instance=user, data=self.request.data)
+    #     if srz_data.is_valid():
+    #         srz_data.save()
+    #         return Response(srz_data.data, status=status.HTTP_200_OK)
+    #     return Response(srz_data.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# class ImageViewSet(generics.ListAPIView):
-#     permission_classes = [IsAuthenticated,]
-#     queryset = User.objects.all()
-#     serializer_class = UserImageSerializer
-
-#     def post(self, request, *args, **kwargs):
-#         file = request.data['file']
-#         self.request.user.image = file
-#         self.request.user.save()
-#         return HttpResponse(json.dumps({'message': "Uploaded"}), status=200)

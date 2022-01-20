@@ -152,20 +152,19 @@
           {% block cart_filter %}
           
           {% endblock cart_filter %}
-
           <!-- Budget Report -->
           <div class="card">
             <div class="card-body pb-0">
               <h5 class="card-title">Budget Report</h5>
               <div class="news">
                 
-                {% for cart in carts %}
-                <div class="post-item clearfix">
-                  <span>{{ cart }}</span>
-                  <h4>price: {{ cart.get_total_price }}</h4>
-                </div>
-                {% endfor %}
-      
+                  {% for cart in carts %}
+                  <div class="post-item clearfix">
+                    <span>{{ cart }}</span>
+                    <h4>price: {{ cart.get_total_price }}</h4>
+                  </div>
+                  {% endfor %}
+                
               </div>
             </div>
           </div><!-- End Budget Report -->
@@ -209,7 +208,6 @@
 
             </div>
           </div><!-- End Tag List -->
-
 
         </div><!-- End Right side columns -->
 

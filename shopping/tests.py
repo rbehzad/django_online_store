@@ -45,13 +45,15 @@ class Test(APITestCase):
                    shop_type=self.shoptype2, title='hh')
         mommy.make(Cart, user=self.user,
                    shop=self.shop1, title='cart')
-        self.product1 = mommy.make(Product, shop=self.shop1,
+        self.product1 = Product.objects.create(shop=self.shop1,
                    title='cart', description='create cart test', price=22, amount=3)
+        # self.product1 = mommy.make(Product, shop=self.shop1,
+        #            title='cart', description='create cart test', price=22, amount=3)
         self.product1.tag.add(self.tag1)
         self.product1.save()
         mommy.make(Cart, user=self.user,
                    shop=self.shop1, title='cart', status='Paid')
-        mommy.make(Cart, user=self.user,
+        self.cart = mommy.make(Cart, user=self.user,
                    shop=self.shop1, title='cart', status='Pending')
 
 
@@ -76,8 +78,9 @@ class Test(APITestCase):
     def test_create_cart(self):
         self.client.force_authenticate(self.user2)
         url = reverse('shopping_create_cart', kwargs={'pk': self.product1.id})
-        resp = self.client.get(url)
+        resp = self.client.post(url)
         self.assertEqual(resp.status_code, 201)
+        
 
     def test_paid(self):
         self.client.force_authenticate(self.user)
@@ -91,3 +94,8 @@ class Test(APITestCase):
         resp = self.client.get(url)
         self.assertEqual(resp.status_code, 200)
 
+    # def test_pay(self):
+    #     self.client.force_authenticate(self.user)
+    #     url = reverse('shopping_pay', kwargs={'cart_pk': self.cart})
+    #     resp = self.client.post(url)
+    #     self.assertEqual(resp.status_code, 200)
