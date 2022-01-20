@@ -97,5 +97,5 @@ class Test(APITestCase):
     # def test_pay(self):
     #     self.client.force_authenticate(self.user)
     #     url = reverse('shopping_pay', kwargs={'cart_pk': self.cart})
-    #     resp = self.client.post(url)
+    #     resp = self.client.put(url)
     #     self.assertEqual(resp.status_code, 200)
