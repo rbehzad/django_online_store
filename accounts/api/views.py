@@ -1,3 +1,5 @@
+import json
+from django.http import HttpResponse
 from rest_framework.response import Response
 from .serializers import MyTokenObtainPairSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -41,11 +43,13 @@ class RetrieveUpdateUser(generics.RetrieveUpdateAPIView):
         return Response(srz_data.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# class UserImageView(generics.ListAPIView):
-#     queryset = UserImage.objects.all()
+# class ImageViewSet(generics.ListAPIView):
+#     permission_classes = [IsAuthenticated,]
+#     queryset = User.objects.all()
 #     serializer_class = UserImageSerializer
 
 #     def post(self, request, *args, **kwargs):
-#         fil = request.data['file']
-#         image = UserImage.objects.create(image=fil)
-#         return HTTPResponse(json.dumps({'message': "Uploaded"}), status=200)
+#         file = request.data['file']
+#         self.request.user.image = file
+#         self.request.user.save()
+#         return HttpResponse(json.dumps({'message': "Uploaded"}), status=200)

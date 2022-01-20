@@ -222,11 +222,10 @@ class ProductList(LoginRequiredMixin, ListView):
         num_products = 0
         for cart_item in cart_items:
             num_products += cart_item.amount
-        print('----', num_carts, '-----', num_products)
         context = {
             'products': Product.objects.filter(shop__slug=self.kwargs['slug']),
             'shop': shop,
-            'num_carts': 3,
+            'num_carts': num_carts,
             'num_products': num_products
         }
         return context
@@ -235,7 +234,7 @@ class ProductList(LoginRequiredMixin, ListView):
 @login_required(login_url='shop_login')
 def shop_base(request):
     context = {
-        'carts': Cart.objects.filter(shop__user=request.user),
+        'carts': Cart.objects.filter(shop__user=request.user, status='Paid'),
         'posts': Post.objects.filter(author=request.user),
         'tags': Tag.objects.all()
     }

@@ -1,7 +1,7 @@
+from django.forms import fields
 from rest_framework import serializers
 from shop_managing.models import Product, ShopType, Shop
 from accounts.models import User
-from rest_framework.validators import UniqueValidator
 
 from shopping.models import Cart, CartItem
 
@@ -42,8 +42,8 @@ class CartSerializer(serializers.ModelSerializer):
         fields = ('id', 'shop', 'user', 'status', 'created_at')
 
 
-class CartCreateSerializer(serializers.ModelSerializer):
+# class CartCreateSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Cart
+#         fields = ''
 
-    class Meta:
-        model = Cart
-        fields = ''
