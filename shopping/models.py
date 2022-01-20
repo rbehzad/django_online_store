@@ -24,7 +24,7 @@ class Cart(models.Model):
     
     total_cost = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
-    shop = models.ForeignKey(Shop, on_delete=SET_NULL, null=True)
+    shop = models.ForeignKey(Shop, on_delete=SET_NULL, null=True, related_name='carts')
     
 
     class Meta:

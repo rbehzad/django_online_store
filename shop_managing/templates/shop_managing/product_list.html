@@ -22,22 +22,21 @@ Products List
     
               <!--box 1-->
               <div class="col-md">
-                <small><span>Daily Report</span></small>
                 <div id="myChartDaily">
                   <script>   
                     var chartData = {       
                       "type":"bar",
                       "scale-x":{
                         "values": [
-                          'NOSC',
+                          'NOSC',  
                           'NOSP',
                         ]
                       },
                       'series': [
                         {
                           'values': [
-                              25,
-                              23,
+                              '{{ num_carts }}',
+                              '{{ num_products }}',
                             ]
                         }
                       ]
@@ -48,19 +47,9 @@ Products List
                     });
                   </script>
                 </div>
-                <small><span>NOSC = Number Of Sold Cart</span></small>
-                <small><span>NOSP = Number Of Sold Product</span></small>
+                <div><small><span>NOSC = Number Of Sold Cart</span></small></div>
+                <div><small><span>NOSP = Number Of Sold Product</span></small></div>
                 
-              </div>
-
-              <!--box 2-->
-              <div class="col-md">
-                <small><span>Weekly Report</span></small>
-              </div>
-
-              <!--box 3-->
-              <div class="col-md">
-                <small><span>Yearly Report</span></small>
               </div>
           </div>
         

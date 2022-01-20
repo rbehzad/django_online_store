@@ -32,6 +32,28 @@ from rest_framework.response import Response
 #         images = Product.objects.all()
 #         return render(request, 'index.html', {'images':images})
 
+def get_customers_with_all_information(logined_user):
+    # find number of paid carts
+    customers = []
+    for customer in User.objects.all():
+        paid_carts = list(Cart.objects.filter(user=customer, status='Paid'))
+        customer.num_carts = len(paid_carts)
+        if customer != logined_user and customer.num_carts != 0:
+            customers.append(customer) # customer2 is request.user's customers
+
+    for customer in customers:
+        carts = Cart.objects.filter(user=customer, status='Paid')
+        if carts.exists():
+            customer.last_cart_date = carts.last().created_at # find last cart date
+        sum = 0
+        total_paid = 0
+        for cart in carts:
+            sum = cart.get_products_number()
+            total_paid = cart.get_total_price()
+        customer.num_products = sum
+        customer.total_paid = total_paid
+    return customers
+
 
 class MyShopList(LoginRequiredMixin, ListView):
     model = Shop
@@ -50,32 +72,10 @@ class MyShopList(LoginRequiredMixin, ListView):
     #     }
     #     return context
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        # find number of paid carts
-        customers = User.objects.annotate(num_carts=Count('carts'))
-        customers2 = []
-        for customer in customers:
-            paid_carts = list(Cart.objects.filter(user=customer, status='Paid'))
-            customer.num_carts = len(paid_carts)
-            if customer != self.request.user and customer.num_carts != 0:
-                customers2.append(customer)
-        # find number of products
-        for customer in customers2:
-            carts = Cart.objects.filter(user=customer, status='Paid')
-            if carts.exists():
-                customer.last_cart_date = carts.last().created_at # find last cart date
-            sum = 0
-            total_paid = 0
-            for cart in carts:
-                sum = cart.get_products_number()
-                total_paid = cart.get_total_price()
-            customer.num_products = sum
-            customer.total_paid = total_paid
-        # find total paid of customer
-
+        customers = get_customers_with_all_information(self.request.user)
         context = {
             'shops': Shop.objects.filter(user=self.request.user).exclude(status='Deleted'),
-            'customers': customers2,
+            'customers': customers,
         }
         return context
 
@@ -216,10 +216,18 @@ class ProductList(LoginRequiredMixin, ListView):
     template_name = 'shop_managing/product_list.html'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
+        shop = Shop.objects.get(slug=self.kwargs['slug'])
+        num_carts = len(list(Cart.objects.filter(shop=shop, status='Paid')))
+        cart_items = CartItem.objects.filter(product__shop=shop, cart__status='Paid')
+        num_products = 0
+        for cart_item in cart_items:
+            num_products += cart_item.amount
+        print('----', num_carts, '-----', num_products)
         context = {
             'products': Product.objects.filter(shop__slug=self.kwargs['slug']),
-            'shop': Shop.objects.get(slug=self.kwargs['slug'])
+            'shop': shop,
+            'num_carts': 3,
+            'num_products': num_products
         }
         return context
 
