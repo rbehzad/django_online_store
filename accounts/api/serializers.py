@@ -1,11 +1,28 @@
-from django.db import models
-from django.db.models import fields
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
-from ..models import User
-from rest_framework.validators import UniqueValidator
+from accounts.models import User, OTPRequest
 from django.contrib.auth.password_validation import validate_password
 
+
+class RequestOTPSerializer(serializers.Serializer):
+    receiver = serializers.CharField(max_length=50, allow_null=False)
+    channel = serializers.ChoiceField(allow_null=False, choices=OTPRequest.OtpChannel.choices)
+
+class RequestOTPResponseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OTPRequest
+        fields = ['request_id']
+
+class VerifyOtpRequestSerializer(serializers.Serializer):
+    request_id = serializers.UUIDField(allow_null=False)
+    password = serializers.CharField(max_length=4, allow_null=False)
+    receiver = serializers.CharField(max_length=64, allow_null=False)
+
+class ObtainTokenSerializer(serializers.Serializer):
+    token = serializers.CharField(max_length=128, allow_null=False)
+    refresh = serializers.CharField(max_length=128, allow_null=False)
+    created = serializers.BooleanField()
+    
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
