@@ -50,48 +50,15 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(
-        null=False,
-        blank=False,
-        unique=True,
-        max_length=80,
-        verbose_name='Email'
-    )
-    first_name = models.CharField(
-        null=True,
-        blank=True,
-        max_length=80,
-        verbose_name='First Name'
-    )
-    last_name = models.CharField(
-        null=True,
-        blank=True,
-        max_length=80,
-        verbose_name='Last Name'
-    )
-    phone_number = models.CharField(
-        null=True,
-        blank=True,
-        max_length=13,
-        verbose_name='Phone Number',
-        unique=True
-    )
-    active = models.BooleanField(
-        default=True,
-        verbose_name='Is Active'
-    )
-    staff = models.BooleanField(
-        default=False,
-        verbose_name='Is Staff'
-    )
-    superuser = models.BooleanField(
-        default=False,
-        verbose_name='Is Super User'
-    )
-    seller = models.BooleanField(
-        default=False,
-        verbose_name='Is Seller'
-    )
+    email = models.EmailField(null=False, blank=False, unique=True, max_length=80, verbose_name='Email')
+    first_name = models.CharField(null=True, blank=True, max_length=80, verbose_name='First Name')
+    last_name = models.CharField(null=True, blank=True, max_length=80, verbose_name='Last Name')
+    phone_number = models.CharField(max_length=13, verbose_name='Phone Number', unique=True)
+    active = models.BooleanField(default=True, verbose_name='Is Active')
+    staff = models.BooleanField(default=False, verbose_name='Is Staff')
+    superuser = models.BooleanField(default=False, verbose_name='Is Super User')
+    seller = models.BooleanField(default=False, verbose_name='Is Seller')
+    phone_number_confirmation = models.BooleanField(default=False)
     image = models.ImageField(upload_to="images/", null=True, blank=True)
 
     USERNAME_FIELD = 'email'    # username
@@ -148,7 +115,6 @@ class OtpRequestQuerySet(models.QuerySet):
 
 class OTPManager(models.Manager):
     def get_queryset(self):
-        
         return OtpRequestQuerySet(self.model, self._db)
 
     def is_valid(self, receiver, request, password):

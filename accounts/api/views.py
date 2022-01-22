@@ -1,23 +1,25 @@
-from audioop import reverse
-from django.shortcuts import get_object_or_404, redirect
-from .serializers import MyTokenObtainPairSerializer
+from os import stat
+from django.shortcuts import get_object_or_404
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.tokens import RefreshToken
-from ..models import User
-from .serializers import *
+from accounts.models import User
+from accounts.api.serializers import *
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from accounts.api.permissions import PhoneNumberConfirmationPermission
 
 
 class MyObtainTokenPairView(TokenObtainPairView):
-    permission_classes = (AllowAny,)
+    permission_classes = (AllowAny, PhoneNumberConfirmationPermission)
     serializer_class = MyTokenObtainPairSerializer
-
+    
+    def permission_denied(self, request, message=None, code=None):
+        message = 'You are not allowed to login. Please confirm your phone number!'
+        return super().permission_denied(request, message, code)
 
 class RegisterView(generics.CreateAPIView):
-    # queryset = User.objects.all()
     model = User
     permission_classes = (AllowAny,)
     serializer_class = RegisterSerializer
@@ -25,7 +27,6 @@ class RegisterView(generics.CreateAPIView):
 
 class RetrieveUpdateUser(generics.RetrieveUpdateAPIView):
     serializer_class = UpdateProfileSerializer
-    # queryset = User.objects.all()
     permission_classes = [IsAuthenticated,]
 
     def get_object(self):
@@ -47,28 +48,25 @@ class OTPView(APIView):
         if serializer.is_valid():
             data = serializer.validated_data
             if OTPRequest.objects.is_valid(data['receiver'], data['request_id'], data['password']):
-                
                 return Response(self._handle_login(data))
             else:
-                
                 return Response(status=status.HTTP_401_UNAUTHORIZED)
 
         else:
-            return Response(status=status.HTTP_400_BAD_REQUEST, data = serializer.errors)
+            return Response(status=status.HTTP_400_BAD_REQUEST, data=serializer.errors)
 
     def _handle_login(self, otp):
         query = User.objects.filter(phone_number=otp['receiver'])
         if query.exists():
-            created = False
             user = query.first()
+            user.phone_number_confirmation = True
+            user.save()
+            refresh = RefreshToken.for_user(user)
+            return ObtainTokenSerializer({
+                'refresh': str(refresh),
+                'token': str(refresh.access_token),
+                'message': 'Successfully Login',
+            }).data
         else:
-            user = User.objects.create(phone_number=otp['receiver'] )
-            created = True
-
-        refresh = RefreshToken.for_user(user)
-
-        return ObtainTokenSerializer({
-            'refresh': str(refresh),
-            'token': str(refresh.access_token),
-            'created':created
-        }).data
+            data = {}
+            return 'User Not Found'

@@ -21,7 +21,7 @@ class VerifyOtpRequestSerializer(serializers.Serializer):
 class ObtainTokenSerializer(serializers.Serializer):
     token = serializers.CharField(max_length=128, allow_null=False)
     refresh = serializers.CharField(max_length=128, allow_null=False)
-    created = serializers.BooleanField()
+    message = serializers.CharField(max_length=220)
     
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
