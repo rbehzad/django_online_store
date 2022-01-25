@@ -1,4 +1,5 @@
-from os import stat
+from logging import raiseExceptions
+from django.http import response
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -19,6 +20,7 @@ class MyObtainTokenPairView(TokenObtainPairView):
         message = 'You are not allowed to login. Please confirm your phone number!'
         return super().permission_denied(request, message, code)
 
+
 class RegisterView(generics.CreateAPIView):
     model = User
     permission_classes = (AllowAny,)
@@ -34,11 +36,15 @@ class RetrieveUpdateUser(generics.RetrieveUpdateAPIView):
 
 
 class OTPView(APIView):
-    def get(self, request):
+    def get(self, request): # take args in request url
         serializer = RequestOTPSerializer(data=request.query_params)
         if serializer.is_valid():
             data = serializer.validated_data
-            otp = OTPRequest.objects.generate(data)
+            if not User.objects.filter(phone_number=data['receiver']).exists():
+                phone_number = data['receiver']
+                return Response(status=status.HTTP_404_NOT_FOUND, data=f'User with {phone_number} phone number not found')
+
+            otp = OTPRequest.objects.generate(data) # create model
             return Response(data=RequestOTPResponseSerializer(otp).data)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST, data=serializer.errors)
@@ -50,7 +56,7 @@ class OTPView(APIView):
             if OTPRequest.objects.is_valid(data['receiver'], data['request_id'], data['password']):
                 return Response(self._handle_login(data))
             else:
-                return Response(status=status.HTTP_401_UNAUTHORIZED)
+                return Response(status=status.HTTP_400_BAD_REQUEST, data='Wrong Password')
 
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST, data=serializer.errors)
@@ -67,6 +73,3 @@ class OTPView(APIView):
                 'token': str(refresh.access_token),
                 'message': 'Successfully Login',
             }).data
-        else:
-            data = {}
-            return 'User Not Found'

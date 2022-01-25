@@ -105,11 +105,8 @@ class OtpRequestQuerySet(models.QuerySet):
             request_id=request,
             password=password,
             created__lt=current_time,
-            created__gt=current_time-timedelta(seconds=120),
-
+            created__gt=current_time-timedelta(seconds=300),
         ).exists()
-        
-        print(result)
         return result
 
 
@@ -134,8 +131,7 @@ def generate_otp():
 
 class OTPRequest(models.Model):
     class OtpChannel(models.TextChoices):
-        PHONE = 'phone',
-        EMAIL = 'email',
+        PHONE = 'phone'
 
     request_id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     channel = models.CharField(max_length=10, choices=OtpChannel.choices, default=OtpChannel.PHONE)

@@ -18,6 +18,7 @@ class VerifyOtpRequestSerializer(serializers.Serializer):
     password = serializers.CharField(max_length=4, allow_null=False)
     receiver = serializers.CharField(max_length=64, allow_null=False)
 
+
 class ObtainTokenSerializer(serializers.Serializer):
     token = serializers.CharField(max_length=128, allow_null=False)
     refresh = serializers.CharField(max_length=128, allow_null=False)
