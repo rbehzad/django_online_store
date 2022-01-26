@@ -40,14 +40,15 @@ class ProductView(generics.ListAPIView):
 
 class CreateCartView(APIView):# create cart with add a product
     permission_classes = [IsAuthenticated,]
+
     def post(self, request, pk):
         product = Product.objects.filter(id=pk).first()
         if not product:
             return Response(f"There is no product with {pk} id", status=status.HTTP_404_NOT_FOUND)
-        shop = product.shop
-        cart = Cart.objects.create(title='cart', user=request.user, shop=shop)
         if product.amount == 0:
             return Response(f"You can only add {product.amount} units of the product with {product.id} id to your cart as we don't have more in stock. Please re-adjust the quantity.", status=status.HTTP_403_FORBIDDEN)
+        shop = product.shop
+        cart = Cart.objects.create(title='cart', user=request.user, shop=shop)
         CartItem.objects.create(cart=cart, product=product, amount=1)
         product.amount -= 1
         product.save()
@@ -112,6 +113,7 @@ class AddDeleteProductInCartView(APIView):
 
 class PayCartView(APIView):
     permission_classes = [IsAuthenticated,]
+
     def post(self, request, cart_pk):
         cart = Cart.objects.filter(id=cart_pk).first()
         if not cart or cart.status != 'Confirmed':
