@@ -1,5 +1,4 @@
-from logging import raiseExceptions
-from django.http import response
+from rest_framework.parsers import FileUploadParser
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -30,6 +29,7 @@ class RegisterView(generics.CreateAPIView):
 class RetrieveUpdateUser(generics.RetrieveUpdateAPIView):
     serializer_class = UpdateProfileSerializer
     permission_classes = [IsAuthenticated,]
+    parser_classes = (FileUploadParser,)
 
     def get_object(self):
         return get_object_or_404(User, id=self.request.user.id)
@@ -37,7 +37,8 @@ class RetrieveUpdateUser(generics.RetrieveUpdateAPIView):
 
 class OTPView(APIView):
     def get(self, request): # take args in request url
-        serializer = RequestOTPSerializer(data=request.query_params)
+        # serializer = RequestOTPSerializer(data=request.query_params)
+        serializer = RequestOTPSerializer(data=request.data)
         if serializer.is_valid():
             data = serializer.validated_data
             if not User.objects.filter(phone_number=data['receiver']).exists():
