@@ -4,12 +4,12 @@ from accounts.models import User, OTPRequest
 from django.contrib.auth.password_validation import validate_password
 
 
-class RequestOTPSerializer(serializers.ModelSerializer):
-    # receiver = serializers.CharField(max_length=50, allow_null=False)
-    # channel = serializers.ChoiceField(allow_null=False, choices=OTPRequest.OtpChannel.choices)
-    class Meta:
-        model = OTPRequest
-        fields = ('receiver', 'channel')
+class RequestOTPSerializer(serializers.Serializer):
+    receiver = serializers.CharField(max_length=50, allow_null=False)
+    channel = serializers.ChoiceField(allow_null=False, choices=OTPRequest.OtpChannel.choices)
+    # class Meta:
+    #     model = OTPRequest
+    #     fields = ('receiver', 'channel')
 
 
 class RequestOTPResponseSerializer(serializers.ModelSerializer):

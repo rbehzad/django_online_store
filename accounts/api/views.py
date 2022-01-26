@@ -1,3 +1,4 @@
+import uuid
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -9,7 +10,7 @@ from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from accounts.api.permissions import PhoneNumberConfirmationPermission
-
+from drf_yasg.utils import swagger_auto_schema
 
 class MyObtainTokenPairView(TokenObtainPairView):
     permission_classes = (AllowAny, PhoneNumberConfirmationPermission)
@@ -35,8 +36,9 @@ class RetrieveUpdateUser(generics.RetrieveUpdateAPIView):
         return get_object_or_404(User, id=self.request.user.id)
 
 
-class OTPView(APIView):
-    def get(self, request): # take args in request url
+class OTP_get_request_id_view(APIView):
+    @swagger_auto_schema(request_body=RequestOTPSerializer)
+    def post(self, request): # take args in request url
         # serializer = RequestOTPSerializer(data=request.query_params)
         serializer = RequestOTPSerializer(data=request.data)
         if serializer.is_valid():
@@ -50,6 +52,9 @@ class OTPView(APIView):
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST, data=serializer.errors)
 
+
+class OTP_validate_view(APIView):
+    @swagger_auto_schema(request_body=VerifyOtpRequestSerializer)
     def post(self, request):
         serializer = VerifyOtpRequestSerializer(data=request.data)
         if serializer.is_valid():

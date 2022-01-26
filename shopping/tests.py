@@ -54,7 +54,7 @@ class Test(APITestCase):
         mommy.make(Cart, user=self.user,
                    shop=self.shop1, title='cart', status='Paid')
         self.cart = mommy.make(Cart, user=self.user,
-                   shop=self.shop1, title='cart', status='Pending')
+                   shop=self.shop1, title='cart', status='Confirmed')
 
 
     def test_shoptype_list(self):
@@ -94,8 +94,8 @@ class Test(APITestCase):
         resp = self.client.get(url)
         self.assertEqual(resp.status_code, 200)
 
-    # def test_pay(self):
-    #     self.client.force_authenticate(self.user)
-    #     url = reverse('shopping_pay', kwargs={'cart_pk': self.cart})
-    #     resp = self.client.put(url)
-    #     self.assertEqual(resp.status_code, 200)
+    def test_pay(self):
+        self.client.force_authenticate(self.user)
+        url = reverse('shopping_pay', kwargs={'cart_pk': self.cart.pk})
+        resp = self.client.post(url)
+        self.assertEqual(resp.status_code, 200)
