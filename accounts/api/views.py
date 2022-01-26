@@ -1,4 +1,4 @@
-from rest_framework.parsers import FileUploadParser
+from rest_framework.parsers import MultiPartParser, FormParser
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -29,7 +29,7 @@ class RegisterView(generics.CreateAPIView):
 class RetrieveUpdateUser(generics.RetrieveUpdateAPIView):
     serializer_class = UpdateProfileSerializer
     permission_classes = [IsAuthenticated,]
-    parser_classes = (FileUploadParser,)
+    parser_classes = [FormParser, MultiPartParser]
 
     def get_object(self):
         return get_object_or_404(User, id=self.request.user.id)
