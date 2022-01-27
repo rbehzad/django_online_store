@@ -2,7 +2,14 @@
 
 
 {% block page_title %}
-Dashboard
+<div class="row">
+    <div class="col-4">Dashboard</div>
+    <div class="col-6">
+        {% if not phone_number_confirmation %}
+        <small>Your phone number is not confirm!</small>
+        {% endif %}
+    </div>
+</div>
 {% endblock page_title %}
 
 

@@ -17,7 +17,7 @@ class MyObtainTokenPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
     
     def permission_denied(self, request, message=None, code=None):
-        message = 'You are not allowed to login. Please confirm your phone number!'
+        message = 'Wrong email/password or your phone number is not confirmed!'
         return super().permission_denied(request, message, code)
 
 
@@ -39,7 +39,6 @@ class RetrieveUpdateUser(generics.RetrieveUpdateAPIView):
 class OTP_get_request_id_view(APIView):
     @swagger_auto_schema(request_body=RequestOTPSerializer)
     def post(self, request): # take args in request url
-        # serializer = RequestOTPSerializer(data=request.query_params)
         serializer = RequestOTPSerializer(data=request.data)
         if serializer.is_valid():
             data = serializer.validated_data

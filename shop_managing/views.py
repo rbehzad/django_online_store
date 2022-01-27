@@ -22,16 +22,6 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 
-#### view for image (file field):
-# def upload(request):
-#     if request.method == 'POST':
-#         images = request.FILES.getlist('images')
-
-#         for img in images:
-#             Product.objects.create(image=img, ...)
-#         images = Product.objects.all()
-#         return render(request, 'index.html', {'images':images})
-
 def get_customers_with_all_information(logined_user):
     # find number of paid carts
     customers = []
@@ -59,23 +49,14 @@ class MyShopList(LoginRequiredMixin, ListView):
     model = Shop
     context_object_name = 'shops'
     template_name = 'shop_managing/shop_dashboard.html'
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)        
-    #     for cart in Cart.objects.all():
-    #         cart.total_cost = cart.get_total_price()
-    #         cart.save()
-    #         # print(cart.total_cost)
-    #     carts = Cart.objects.filter(shop__user=self.request.user, status='Paid').values('user__email').annotate(num_amounts=Sum('cart_item__amount'), num_carts=Count('id'), last_cart_date=Max('created_at'), total_paid=Sum('total_cost'))
-    #     context = {
-    #         'shops': Shop.objects.filter(user=self.request.user).exclude(status='Deleted'),
-    #         'carts': carts,
-    #     }
-    #     return context
+
     def get_context_data(self, **kwargs):
-        customers = get_customers_with_all_information(self.request.user)
+        user = self.request.user
+        customers = get_customers_with_all_information(user)
         context = {
-            'shops': Shop.objects.filter(user=self.request.user).exclude(status='Deleted'),
+            'shops': Shop.objects.filter(user=user).exclude(status='Deleted'),
             'customers': customers,
+            'phone_number_confirmation': user.phone_number_confirmation,
         }
         return context
 
