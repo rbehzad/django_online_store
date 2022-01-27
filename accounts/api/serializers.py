@@ -1,3 +1,4 @@
+import re
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
 from accounts.models import User, OTPRequest
@@ -40,6 +41,7 @@ class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
     password2 = serializers.CharField(write_only=True, required=True)
     phone_number = serializers.CharField(required=True)
+    # phone_number = PhoneNumberField(required=True, unique=True)
     first_name = serializers.CharField(required=True)
     last_name = serializers.CharField(required=True)
 
@@ -54,14 +56,20 @@ class RegisterSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-        user = User.objects.create_user(
-            email=validated_data['email'],
-            password=validated_data['password'],
-            phone_number=validated_data['phone_number'],
-            first_name=validated_data['first_name'],
-            last_name=validated_data['last_name'],
-        )
-        return user
+        phone_number_pattern = '^(0)?9\d{9}$'
+        if not re.search(phone_number_pattern, validated_data['phone_number']):
+            raise serializers.ValidationError("Not valid phone number!")
+        try:
+            user = User.objects.create_user(
+                email=validated_data['email'],
+                password=validated_data['password'],
+                phone_number=validated_data['phone_number'],
+                first_name=validated_data['first_name'],
+                last_name=validated_data['last_name'],
+            )
+            return user
+        except:
+            raise serializers.ValidationError("email or phone number poblem!")
 
 
 class ProfileSerializer(serializers.ModelSerializer):

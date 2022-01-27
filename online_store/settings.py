@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'kavenegar',
 ]
 
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
