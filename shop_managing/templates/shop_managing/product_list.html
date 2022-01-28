@@ -24,7 +24,7 @@ Products List
               <div class="col-md">
                 <div id="myChartDaily">
                   <script>   
-                    var chartData = {       
+                    var chartData = {    
                       "type":"bar",
                       "scale-x":{
                         "values": [
@@ -33,18 +33,19 @@ Products List
                         ]
                       },
                       'series': [
-                        {
-                          'values': [
-                              '{{ num_carts }}',
-                              '{{ num_products }}',
-                            ]
-                        }
+                      {
+                        'values': [
+                            '{{ num_carts }}',
+                            '{{ num_products }}',
+                          ]
+                      }
                       ]
                     }
                     zingchart.render({
                       id: "myChartDaily",
                       data: chartData,
                     });
+
                   </script>
                 </div>
                 <div><small><span>NOSC = Number Of Sold Cart</span></small></div>

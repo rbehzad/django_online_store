@@ -41,7 +41,6 @@ class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
     password2 = serializers.CharField(write_only=True, required=True)
     phone_number = serializers.CharField(required=True)
-    # phone_number = PhoneNumberField(required=True, unique=True)
     first_name = serializers.CharField(required=True)
     last_name = serializers.CharField(required=True)
 
